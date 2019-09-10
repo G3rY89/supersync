@@ -51,7 +51,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     UgyvitelProducts uProducts = new UgyvitelProducts();
 
     Request request = new Request.Builder()
-      .url("https://unasapi.herokuapp.com/getproducts_fromunas")
+      .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString())
       .get()
       .addHeader("ApiKey", apiKey)
       .build();
