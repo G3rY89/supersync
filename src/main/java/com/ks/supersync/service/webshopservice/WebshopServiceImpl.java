@@ -30,8 +30,7 @@ public class WebshopServiceImpl implements WebshopService {
     public Object getItemsForUgyvitel(String webIdentifier, String webPassword, String webShop, String syncType)
             throws IOException, JAXBException {
 
-                UserWebshops uWebshops = new UserWebshops();//userWebshopsRepository.findByUserId(superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword).id);
-                uWebshops.webshopApiKey = "64439f257c7470085af2b514dadd5a53504e5592";
+                UserWebshops uWebshops = userWebshopsRepository.findByUserId(superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword).id);
 
                 switch(webShop){
                     case "UNAS":
