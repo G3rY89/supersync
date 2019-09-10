@@ -2,12 +2,12 @@ package com.ks.supersync.service.unasapiservice;
 
 public enum UnasMServiceEndpoints {
 
-    GET_PRODUCTS("ks-supersync-unasapi/getproducts_fromunas"),
-    GET_CUSTOMERS("ks-supersync-unasapi/getcustomers_fromunas"),
-    GET_ORDERS("ks-supersync-unasapi/getorders_fromunas"),
-    SET_PRODUCTS("ks-supersync-unasapi/setproducts_tounas"),
-    SET_CUSTOMERS("ks-supersync-unasapi/setcustomers_tounas"),
-    SET_ORDERS("ks-supersync-unasapi/setorders_tounas");
+    GET_PRODUCTS("/getproducts_fromunas"),
+    GET_CUSTOMERS("/getcustomers_fromunas"),
+    GET_ORDERS("/getorders_fromunas"),
+    SET_PRODUCTS("/setproducts_tounas"),
+    SET_CUSTOMERS("/setcustomers_tounas"),
+    SET_ORDERS("/setorders_tounas");
 
     public final String url;
 
