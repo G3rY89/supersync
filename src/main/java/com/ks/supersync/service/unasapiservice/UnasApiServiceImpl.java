@@ -64,6 +64,8 @@ public class UnasApiServiceImpl implements UnasApiService {
     Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
     StringReader reader = new StringReader(response.body().string());
 
+    System.out.println(response.body().string());
+
     UnasProducts unasProducts = (UnasProducts) jaxbUnmarshaller.unmarshal(reader);
 
     uProducts = mapUnasProductsToUgyvitelProducts(unasProducts);
