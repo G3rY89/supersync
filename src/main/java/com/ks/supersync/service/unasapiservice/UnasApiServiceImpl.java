@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -49,6 +50,8 @@ public class UnasApiServiceImpl implements UnasApiService {
   public UgyvitelProducts getUnasProductsToUgyvitel(String apiKey) throws IOException, JAXBException {
     
     UgyvitelProducts uProducts = new UgyvitelProducts();
+
+    client.newBuilder().connectTimeout(15, TimeUnit.SECONDS).writeTimeout(15, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS);
 
     Request request = new Request.Builder()
       .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString())
