@@ -54,22 +54,11 @@ public class UnasApiServiceImpl implements UnasApiService {
     client.newBuilder().connectTimeout(15, TimeUnit.SECONDS).writeTimeout(15, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS);
 
     Request request = new Request.Builder()
-      .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString())
+      .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString() + "?debug=true")
       .get()
       .addHeader("ApiKey", apiKey)
       .build();
     Response response = client.newCall(request).execute();
-
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString());
-    System.out.println(response);
-    System.out.println(2);
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UnasProducts.class);
     Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
