@@ -67,8 +67,8 @@ public class UnasApiServiceImpl implements UnasApiService {
     System.out.println();
     System.out.println();
     System.out.println();
-    System.out.println(1);
-    System.out.println(response.body().string());
+    System.out.println(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString());
+    System.out.println(response);
     System.out.println(2);
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UnasProducts.class);
