@@ -7,7 +7,9 @@ public enum UnasMServiceEndpoints {
     GET_ORDERS("/getorders_fromunas"),
     SET_PRODUCTS("/setproducts_tounas"),
     SET_CUSTOMERS("/setcustomers_tounas"),
-    SET_ORDERS("/setorders_tounas");
+    SET_ORDERS("/setorders_tounas"),
+    SET_CATEGORIES("/setcategories_tounas"),
+    SET_STOCKS("/setstocks_tounas");
 
     public final String url;
 

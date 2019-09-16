@@ -204,6 +204,52 @@ public class UnasApiServiceImpl implements UnasApiService {
     return response.body().string();
   }
 
+  @Override
+  public Object sendUgyvitelStockToUnas(String apiKey, String Products) throws IOException, JAXBException {
+    
+    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelProducts.class);
+    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    StringReader reader = new StringReader(Products);
+
+    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
+
+    MediaType mediaType = MediaType.parse("application/xml");
+
+    jaxbContext = JAXBContext.newInstance(UnasProducts.class);
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    StringWriter sw = new StringWriter();
+    jaxbMarshaller.marshal(mapUgyvitelStocksToUnasStocks(ugyvitelProducts), sw);
+
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
+
+    Request setStockRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_STOCKS.toString())
+        .post(body)
+        .addHeader("ApiKey", apiKey)
+        .build();
+    Response response = client.newCall(setStockRequest).execute();
+
+    return response.body().string();
+  }
+  
+  private Object mapUgyvitelStocksToUnasStocks(UgyvitelProducts ugyvitelProducts) {
+    
+    UnasProducts unasProducts = new UnasProducts();
+    
+    unasProducts.products = new ArrayList<>();
+
+    for (UgyvitelProduct ugyvitelProduct : ugyvitelProducts.product) {
+      UnasProduct unasProduct = new UnasProduct();
+
+      //todo map
+      
+      unasProducts.products.add(unasProduct);
+    }
+    return unasProducts;
+  }
+
+
   private Object mapUgyvitelOrdersToUnasOrders(UgyvitelOrders ugyvitelOrders) {
     
     UnasOrders unasOrders = new UnasOrders();
@@ -213,6 +259,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     for (UgyvitelOrder ugyvitelOrder : ugyvitelOrders.order) {
       UnasOrder unasOrder = new UnasOrder();
 
+      //todo map
       
       unasOrders.orders.add(unasOrder);
     }
@@ -440,5 +487,4 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     return unasProducts;
   }
-
 }
