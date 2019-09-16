@@ -60,5 +60,40 @@ public class UgyvitelCustomer {
     public String deliveryNumber;
     @XmlElement(name = "DeliveryBuilding")
     public String deliveryBuilding;
+    @XmlElement(name = "TaxNumber")
+    public String taxNumber;
+    @XmlElement(name = "EuTaxNumber")
+    public String euTaxNumber;
+    @XmlElement(name = "Phone")
+    public String phone;
+    @XmlElement(name = "Fax")
+    public String fax;
+    @XmlElement(name = "ReceiveNews")
+    public String receiveNews;
+    @XmlElement(name = "WebPage")
+    public String webPage;
+    @XmlElement(name = "DiscountPercent")
+    public String discountPercent;
+    @XmlElement(name = "PaymentmethodName")
+    public String paymentmethodName;
+    @XmlElement(name = "ObligatoryPaymentterms")
+    public String obligatoryPaymentterms;
+    @XmlElement(name = "ExpiredDebit")
+    public String expiredDebit;
+    @XmlElement(name = "Debit")
+    public String debit;
+    @XmlElement(name = "Active")
+    public String active;
+    @XmlElement(name = "Comment")
+    public String comment;
+    @XmlElement(name = "Creditline")
+    public String creditline;
+    @XmlElement(name = "VatRate")
+    public String vatRate;
+    @XmlElement(name = "VatCode")
+    public String vatCode;
+    @XmlElement(name = "Categories")
+    public Categories categories;
+    
     
 }

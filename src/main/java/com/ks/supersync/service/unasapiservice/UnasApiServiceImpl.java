@@ -146,6 +146,53 @@ public class UnasApiServiceImpl implements UnasApiService {
     return response.body().string();
   }
 
+  @Override
+  public Object sendUgyvitelCustomerToUnas(String apiKey, String Customers) throws IOException, JAXBException {
+    
+    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCustomers.class);
+    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    StringReader reader = new StringReader(Customers);
+
+    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+
+    MediaType mediaType = MediaType.parse("application/xml");
+
+    jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    StringWriter sw = new StringWriter();
+    jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(ugyvitelCustomers), sw);
+
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
+
+    Request setProductRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString())
+        .post(body)
+        .addHeader("ApiKey", apiKey)
+        .build();
+    Response response = client.newCall(setProductRequest).execute();
+
+    return response.body().string();
+  }
+
+  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(UgyvitelCustomers ugyvitelCustomers){
+    UnasCustomers unasCustomers = new UnasCustomers();
+    
+    unasCustomers.customer = new ArrayList<>();
+
+    for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
+      UnasCustomer unasCustomer = new UnasCustomer();
+
+      unasCustomer.email = ugyvitelCustomer.email;
+      unasCustomer.contact.name = ugyvitelCustomer.contactName;
+      unasCustomer.contact.phone = ugyvitelCustomer.phone;
+      unasCustomer.contact.mobile = ugyvitelCustomer.phone;
+      unasCustomers.customer.add(unasCustomer);
+    }
+    return unasCustomers;
+  }
+
+
   private UgyvitelProducts mapUnasProductsToUgyvitelProducts(UnasProducts unasProducts){
 
     UgyvitelProducts ugyvitelProducts = new UgyvitelProducts();

@@ -42,4 +42,8 @@ public class UnasCustomer {
     public List<Restriction> restrictions;
     @XmlElement(name = "Others")
     public Others others;
+
+    public UnasCustomer(){
+        this.contact = new Contact();
+    }
 }

@@ -18,4 +18,6 @@ public interface UnasApiService {
     public UgyvitelOrders getOrdersToUgyvitel(String apiKey) throws IOException, JAXBException;
     
     public Object sendUgyvitelProductToUnas(String apiKey, String Products) throws IOException, JAXBException;
+
+    public Object sendUgyvitelCustomerToUnas(String apiKey, String Products) throws IOException, JAXBException;
 }
