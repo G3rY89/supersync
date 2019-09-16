@@ -175,7 +175,52 @@ public class UnasApiServiceImpl implements UnasApiService {
     return response.body().string();
   }
 
-  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(UgyvitelCustomers ugyvitelCustomers){
+  @Override
+  public Object sendUgyvitelOrderToUnas(String apiKey, String Orders) throws IOException, JAXBException {
+    
+    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelOrders.class);
+    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    StringReader reader = new StringReader(Orders);
+
+    UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) jaxbUnmarshaller.unmarshal(reader);
+
+    MediaType mediaType = MediaType.parse("application/xml");
+
+    jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    StringWriter sw = new StringWriter();
+    jaxbMarshaller.marshal(mapUgyvitelOrdersToUnasOrders(ugyvitelOrders), sw);
+
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
+
+    Request setOrderRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_ORDERS.toString())
+        .post(body)
+        .addHeader("ApiKey", apiKey)
+        .build();
+    Response response = client.newCall(setOrderRequest).execute();
+
+    return response.body().string();
+  }
+
+  private Object mapUgyvitelOrdersToUnasOrders(UgyvitelOrders ugyvitelOrders) {
+    
+    UnasOrders unasOrders = new UnasOrders();
+    
+    unasOrders.orders = new ArrayList<>();
+
+    for (UgyvitelOrder ugyvitelOrder : ugyvitelOrders.order) {
+      UnasOrder unasOrder = new UnasOrder();
+
+      
+      unasOrders.orders.add(unasOrder);
+    }
+    return unasOrders;
+  }
+
+
+  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(UgyvitelCustomers ugyvitelCustomers) {
     UnasCustomers unasCustomers = new UnasCustomers();
     
     unasCustomers.customer = new ArrayList<>();
@@ -186,7 +231,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCustomer.email = ugyvitelCustomer.email;
       unasCustomer.contact.name = ugyvitelCustomer.contactName;
       unasCustomer.contact.phone = ugyvitelCustomer.phone;
-      unasCustomer.contact.mobile = ugyvitelCustomer.phone;
+      unasCustomer.contact.mobile = ugyvitelCustomer.phone != null ? ugyvitelCustomer.phone : "";
       unasCustomers.customer.add(unasCustomer);
     }
     return unasCustomers;
