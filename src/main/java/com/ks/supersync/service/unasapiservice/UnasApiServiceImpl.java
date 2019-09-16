@@ -165,12 +165,12 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    Request setProductRequest = new Request.Builder()
+    Request setCustomerRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString())
         .post(body)
         .addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setProductRequest).execute();
+    Response response = client.newCall(setCustomerRequest).execute();
 
     return response.body().string();
   }
