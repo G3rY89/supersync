@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.*;
 
-import com.ks.supersync.model.unas.product.stock.Stock;
+import com.ks.supersync.model.unas.product.stock.Stocks;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Product")
@@ -72,7 +72,7 @@ public class UnasProduct {
     @XmlElement(name = "SimilarProducts")  
     public List<SimilarProduct> similarProduct;
     @XmlElement(name = "Stocks")  
-    public Stock stocks;
+    public Stocks stocks;
     @XmlElement(name = "PlazaCategory")  
     public PlazaCategory plazaCategory;
     @XmlElement(name = "OnlineContent")  
@@ -81,5 +81,9 @@ public class UnasProduct {
     public Type types;
     @XmlElement(name = "Meta")  
     public Meta meta;
+
+    public UnasProduct(){
+        this.stocks = new Stocks();
+    }
 
 }

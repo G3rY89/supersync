@@ -67,7 +67,7 @@ public class WebshopServiceImpl implements WebshopService {
                         return unasApiService.sendUgyvitelOrderToUnas(uWebshops.webshopApiKey, Item);
 
                         case "STOCK":
-                        return unasApiService.sendUgyviteStockToUnas(uWebshops.webshopApiKey, Item);
+                        return unasApiService.sendUgyvitelStockToUnas(uWebshops.webshopApiKey, Item);
                     }
                 }
         return null;

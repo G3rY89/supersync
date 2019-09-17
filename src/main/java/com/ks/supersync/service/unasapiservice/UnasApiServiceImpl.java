@@ -18,6 +18,7 @@ import com.ks.supersync.model.ugyvitel.order.UgyvitelOrders;
 import com.ks.supersync.model.ugyvitel.order.detail.Detail;
 import com.ks.supersync.model.ugyvitel.order.detail.Details;
 import com.ks.supersync.model.ugyvitel.product.PriceRule;
+import com.ks.supersync.model.ugyvitel.product.Stock;
 import com.ks.supersync.model.ugyvitel.product.UgyvitelProduct;
 import com.ks.supersync.model.ugyvitel.product.UgyvitelProducts;
 import com.ks.supersync.model.unas.customer.UnasCustomer;
@@ -32,6 +33,7 @@ import com.ks.supersync.model.unas.product.Price;
 import com.ks.supersync.model.unas.product.Prices;
 import com.ks.supersync.model.unas.product.UnasProduct;
 import com.ks.supersync.model.unas.product.UnasProducts;
+import com.ks.supersync.model.unas.product.stock.Stocks;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -242,8 +244,13 @@ public class UnasApiServiceImpl implements UnasApiService {
     for (UgyvitelProduct ugyvitelProduct : ugyvitelProducts.product) {
       UnasProduct unasProduct = new UnasProduct();
 
-      //todo map
-      
+      com.ks.supersync.model.unas.product.stock.Stock stock = new com.ks.supersync.model.unas.product.stock.Stock();
+      stock.price = ugyvitelProduct.lastPurchasePrice;
+
+      for (Stock ugyvitelstock : ugyvitelProduct.stocks.stock) {
+        stock.qty += ugyvitelstock.freeStock;
+      }
+      unasProduct.stocks.stock.add(stock);
       unasProducts.products.add(unasProduct);
     }
     return unasProducts;

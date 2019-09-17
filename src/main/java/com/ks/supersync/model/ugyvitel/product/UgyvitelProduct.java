@@ -23,7 +23,7 @@ public class UgyvitelProduct {
     @XmlElement(name = "Barcode")
     public String barCode;
     @XmlElement(name = "LastPurchasePrice")
-    public Integer lastPurchasePrice;
+    public String lastPurchasePrice;
     @XmlElement(name = "Active")
     public Integer active;
     @XmlElement(name = "VatCode")
@@ -40,6 +40,8 @@ public class UgyvitelProduct {
     public String vatRate;
     @XmlElement(name = "PriceRules")
     public PriceRules priceRules;
+    @XmlElement(name = "Stocks")
+    public Stocks stocks;
 
     public UgyvitelProduct(){
         this.productName = new ProductName();
@@ -47,6 +49,7 @@ public class UgyvitelProduct {
         this.quantityUnit = new QuantityUnit();
         this.priceRules = new PriceRules();
         this.productName = new ProductName();
+        this.stocks = new Stocks();
     }
 
     @Override

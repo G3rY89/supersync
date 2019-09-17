@@ -1,13 +1,14 @@
 package com.ks.supersync.model.unas.product.stock;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlElement;
 
 public class Stock {
 
     @XmlElement(name = "Status")
     public Status status;
-    @XmlElement(name = "Variants")
-    public List<String> stock;
+    @XmlElement(name = "Qty")
+    public Integer qty;
+    @XmlElement(name = "Price")
+    public String price;
+
 }
