@@ -34,7 +34,6 @@ import com.ks.supersync.model.unas.product.Price;
 import com.ks.supersync.model.unas.product.Prices;
 import com.ks.supersync.model.unas.product.UnasProduct;
 import com.ks.supersync.model.unas.product.UnasProducts;
-import com.ks.supersync.model.unas.product.stock.Stocks;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -367,7 +366,6 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelProduct.active = unasProduct.state.equals("live") ? 1 : 0;
       ugyvitelProduct.vatCode = unasProduct.Prices != null ? unasProduct.Prices.vat : "";
       ugyvitelProduct.quantityUnit.TranslatedQuantityUnit.add(unasProduct.unit);
-      System.out.println(unasProduct.name);
       ugyvitelProduct.service = unasProduct.stocks != null && unasProduct.stocks.stock != null && unasProduct.stocks.status != null ? unasProduct.stocks.status.active : 0 ;
       if(unasProduct.Prices != null){
         for (Price price : unasProduct.Prices.prices) {
