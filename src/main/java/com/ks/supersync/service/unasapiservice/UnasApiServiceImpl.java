@@ -367,7 +367,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelProduct.active = unasProduct.state.equals("live") ? 1 : 0;
       ugyvitelProduct.vatCode = unasProduct.Prices != null ? unasProduct.Prices.vat : "";
       ugyvitelProduct.quantityUnit.TranslatedQuantityUnit.add(unasProduct.unit);
-      ugyvitelProduct.service = unasProduct.stocks != null ? unasProduct.stocks.status.active : 0 ;
+      ugyvitelProduct.service = unasProduct.stocks.stock != null ? unasProduct.stocks.status.active : 0 ;
       if(unasProduct.Prices != null){
         for (Price price : unasProduct.Prices.prices) {
           if(price.type.equals("normal")){
