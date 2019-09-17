@@ -9,6 +9,8 @@ public class UgyvitelOrder {
 
     @XmlElement(name = "WebshopId")
     public String webshopId;
+    @XmlElement(name = "ExternalId")
+    public String externalId;
     @XmlElement(name = "Currency")
     public String currency;
     @XmlElement(name = "CurrencyRate")
@@ -67,6 +69,46 @@ public class UgyvitelOrder {
     public String deliveryPublicDomain;
     @XmlElement(name = "DeliveryCountry")
     public String deliveryCountry;
+    @XmlElement(name = "OrderAddressZip")
+    public String orderAddressZip;
+    @XmlElement(name = "OrderAddressCity")
+    public String orderAddressCity;
+    @XmlElement(name = "OrderAddressStreet")
+    public String orderAddressStreet;
+    @XmlElement(name = "OrderAddressNumber")
+    public String orderAddressNumber;
+    @XmlElement(name = "OrderAddressPublicDomain")
+    public String orderAddressPublicDomain;
+    @XmlElement(name = "OrderAddressBuilding")
+    public String orderAddressBuilding;
+    @XmlElement(name = "OrderAddressStaircase")
+    public String orderAddressStaircase;
+    @XmlElement(name = "OrderAddressFloor")
+    public String orderAddressFloor;
+    @XmlElement(name = "OrderAddressDoor")
+    public String orderAddressDoor;
+    @XmlElement(name = "OrderAddressCountry")
+    public String orderAddressCountry;
+    @XmlElement(name = "DeliveryAddressZip")
+    public String deliveryAddressZip;
+    @XmlElement(name = "DeliveryAddressCity")
+    public String deliveryAddressCity;
+    @XmlElement(name = "DeliveryAddressStreet")
+    public String deliveryAddressStreet;
+    @XmlElement(name = "DeliveryAddressNumber")
+    public String deliveryAddressNumber;
+    @XmlElement(name = "DeliveryAddressPublicDomain")
+    public String deliveryAddressPublicDomain;
+    @XmlElement(name = "DeliveryAddressBuilding")
+    public String deliveryAddressBuilding;
+    @XmlElement(name = "DeliveryAddressStaircase")
+    public String deliveryAddressStaircase;
+    @XmlElement(name = "DeliveryAddressFloor")
+    public String deliveryAddressFloor;
+    @XmlElement(name = "DeliveryAddressDoor")
+    public String deliveryAddressDoor;
+    @XmlElement(name = "DeliveryAddressCountry")
+    public String deliveryAddressCountry;
     @XmlElement(name = "TaxNumber")
     public String taxNumber;
     @XmlElement(name = "SequencePrefix")
@@ -79,6 +121,8 @@ public class UgyvitelOrder {
     public String deliveryDate;
     @XmlElement(name = "OrderDate")
     public String orderDate;
+    @XmlElement(name = "OrderedDate")
+    public String orderedDate;
     @XmlElement(name = "TransportMode")
     public String transportMode;
     @XmlElement(name = "TopComment")

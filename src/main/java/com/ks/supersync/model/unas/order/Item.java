@@ -15,11 +15,11 @@ public class Item {
     @XmlElement(name = "Unit")
     public String unit;
     @XmlElement(name = "Quantity")
-    public String quantity;
+    public Integer quantity;
     @XmlElement(name = "PriceNet")
     public String priceNet;
     @XmlElement(name = "PriceGross")
-    public String priceGross;
+    public Integer priceGross;
     @XmlElement(name = "Vat")
     public String vat;
     @XmlElement(name = "Status")

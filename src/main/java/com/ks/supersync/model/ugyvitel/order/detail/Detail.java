@@ -11,7 +11,7 @@ public class Detail {
     @XmlElement(name = "ProductName")
     public String productName;
     @XmlElement(name = "Quantity")
-    public String quantity;
+    public Integer quantity;
     @XmlElement(name = "QuantityUnit")
     public String quantityUnit;
     @XmlElement(name = "UnitPrice")
@@ -22,5 +22,7 @@ public class Detail {
     public String productComment;
     @XmlElement(name = "VatCode")
     public String vatCode;
+    @XmlElement(name = "GrossValue")
+    public Integer grossValue;
 
 }

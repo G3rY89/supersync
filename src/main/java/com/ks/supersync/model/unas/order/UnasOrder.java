@@ -5,6 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.*;
 
 import com.ks.supersync.model.unas.customer.Param;
+import com.ks.supersync.model.unas.order.customer.Addresses;
 import com.ks.supersync.model.unas.order.customer.Customer;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,12 +32,14 @@ public class UnasOrder{
     public String statusDetails;
     @XmlElement(name = "StatusEmail")
     public String statusEmail;
-    @XmlElement(name = "Payment")
-    public Payment payment;
     @XmlElement(name = "Shipping")
     public Shipping shipping;
     @XmlElement(name = "Invoice")
     public Invoice invoice;
+    @XmlElement(name = "Payment")
+    public Payment payment;
+    @XmlElement(name = "Addresses")
+    public Addresses addresses;
     @XmlElement(name = "Params")
     public List<Param> params;
     @XmlElement(name = "Referer")
@@ -46,8 +49,15 @@ public class UnasOrder{
     @XmlElement(name = "Info")
     public Info info;
     @XmlElement(name = "Comments")
-    public List<Comment> comments;
+    public Comments comments;
     @XmlElement(name = "Items")
-    public Items Items;
+    public Items items;
 
+    public UnasOrder(){
+        this.customer =  new Customer();
+        this.addresses = new Addresses();
+        this.payment = new Payment();
+        this.comments = new Comments();
+        this.items = new Items();
+    }
 }

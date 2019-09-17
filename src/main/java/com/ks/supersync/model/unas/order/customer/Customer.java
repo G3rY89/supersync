@@ -24,5 +24,9 @@ public class Customer {
     public List<Param> params;
     @XmlElement(name = "Comment")
     public String comment;
+
+    public Customer(){
+        this.contact = new Contact();
+    }
     
 }

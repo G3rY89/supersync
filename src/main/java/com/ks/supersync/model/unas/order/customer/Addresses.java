@@ -11,4 +11,9 @@ public class Addresses {
     public Invoice invoice;
     @XmlElement(name = "Shipping")
     public Shipping shipping;
+
+    public Addresses(){
+        this.invoice = new Invoice();
+        this.shipping = new Shipping();
+    }
 }

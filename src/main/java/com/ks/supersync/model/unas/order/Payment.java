@@ -8,7 +8,7 @@ public class Payment {
     public String id;
     @XmlElement(name = "Name")
     public String name;
-    @XmlElement(name = "type")
+    @XmlElement(name = "Type")
     public String type;
     @XmlElement(name = "Status")
     public String status;
