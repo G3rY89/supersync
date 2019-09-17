@@ -23,6 +23,7 @@ import com.ks.supersync.model.ugyvitel.product.UgyvitelProduct;
 import com.ks.supersync.model.ugyvitel.product.UgyvitelProducts;
 import com.ks.supersync.model.unas.customer.UnasCustomer;
 import com.ks.supersync.model.unas.customer.UnasCustomers;
+import com.ks.supersync.model.unas.order.Comment;
 import com.ks.supersync.model.unas.order.Item;
 import com.ks.supersync.model.unas.order.UnasOrder;
 import com.ks.supersync.model.unas.order.UnasOrders;
@@ -266,8 +267,62 @@ public class UnasApiServiceImpl implements UnasApiService {
     for (UgyvitelOrder ugyvitelOrder : ugyvitelOrders.order) {
       UnasOrder unasOrder = new UnasOrder();
 
-      //todo map
-      
+      unasOrder.key = ugyvitelOrder.externalId;
+      unasOrder.date = ugyvitelOrder.orderedDate;
+      unasOrder.dateMod = "";
+      unasOrder.customer.id = ugyvitelOrder.customerWebshopId;
+      unasOrder.customer.email = ugyvitelOrder.Email;
+      unasOrder.customer.userName = "";
+      unasOrder.customer.contact.name = ugyvitelOrder.customerName;
+      unasOrder.customer.contact.phone = ugyvitelOrder.Phone;
+      unasOrder.customer.contact.mobile = ugyvitelOrder.Phone;
+      unasOrder.customer.contact.lang = "";
+      unasOrder.addresses.invoice.name = ugyvitelOrder.customerName;
+      unasOrder.addresses.invoice.ZIP = ugyvitelOrder.orderAddressZip;
+      unasOrder.addresses.invoice.city = ugyvitelOrder.orderAddressCity;
+      unasOrder.addresses.invoice.country = ugyvitelOrder.orderAddressCountry;
+      unasOrder.addresses.invoice.countryCode = "";
+      unasOrder.addresses.invoice.county = "";
+      unasOrder.addresses.invoice.euTaxNumber = "";
+      unasOrder.addresses.invoice.street = "";
+      unasOrder.addresses.invoice.streetName = ugyvitelOrder.orderAddressStreet;
+      unasOrder.addresses.invoice.streetType = ugyvitelOrder.orderAddressPublicDomain;
+      unasOrder.addresses.invoice.streetNumber = ugyvitelOrder.orderAddressNumber;
+      unasOrder.addresses.invoice.taxNumber = ugyvitelOrder.taxNumber;
+      unasOrder.addresses.shipping.name = ugyvitelOrder.customerName != null ? ugyvitelOrder.customerName : "";
+      unasOrder.addresses.shipping.ZIP = ugyvitelOrder.deliveryAddressZip != null ? ugyvitelOrder.deliveryAddressZip : "" ;
+      unasOrder.addresses.shipping.city = ugyvitelOrder.deliveryAddressCity != null ? ugyvitelOrder.deliveryAddressCity :"" ;
+      unasOrder.addresses.shipping.country = ugyvitelOrder.deliveryAddressCountry != null ? ugyvitelOrder.deliveryAddressCountry : "";
+      unasOrder.addresses.shipping.countryCode = "";
+      unasOrder.addresses.shipping.county = "";
+      unasOrder.addresses.shipping.street = "";
+      unasOrder.addresses.shipping.streetName = ugyvitelOrder.deliveryAddressStreet != null ? ugyvitelOrder.deliveryAddressStreet : "";
+      unasOrder.addresses.shipping.streetType = ugyvitelOrder.deliveryAddressPublicDomain != null ? ugyvitelOrder.deliveryAddressPublicDomain : "";
+      unasOrder.addresses.shipping.streetNumber = ugyvitelOrder.deliveryAddressNumber != null ? ugyvitelOrder.deliveryAddressNumber : "";
+      // group and params missing 
+      unasOrder.currency = ugyvitelOrder.currency;
+      unasOrder.payment.name = ugyvitelOrder.paymentmethod;
+      if(ugyvitelOrder.bottomComment != null){
+        Comment comment = new Comment();
+        comment.text = ugyvitelOrder.bottomComment;
+        unasOrder.comments.comments.add(comment);
+      }
+      if(ugyvitelOrder.topComment!= null){
+        Comment comment = new Comment();
+        comment.text = ugyvitelOrder.topComment;
+        unasOrder.comments.comments.add(comment);
+      }
+      for (Detail detail : ugyvitelOrder.details.detail){
+        Item item = new Item();
+        item.sku = detail.productCode;
+        item.name = detail.productName;
+        item.unit = detail.quantityUnit;
+        item.quantity = detail.quantity;
+        item.priceNet = detail.unitPrice;
+        item.priceGross = detail.grossValue / detail.quantity;
+        item.vat = detail.vatCode;
+        unasOrder.items.item.add(item);
+      }
       unasOrders.orders.add(unasOrder);
     }
     return unasOrders;
@@ -308,7 +363,7 @@ public class UnasApiServiceImpl implements UnasApiService {
         ugyvitelProduct.comment.comment.add(unasProduct.description.shortDesc); //felülvizsgálni
       }
       ugyvitelProduct.barCode = "";
-      ugyvitelProduct.lastPurchasePrice = 0;
+      ugyvitelProduct.lastPurchasePrice = "";
       ugyvitelProduct.active = unasProduct.state.equals("live") ? 1 : 0;
       ugyvitelProduct.vatCode = unasProduct.Prices != null ? unasProduct.Prices.vat : "";
       ugyvitelProduct.quantityUnit.TranslatedQuantityUnit.add(unasProduct.unit);
@@ -421,10 +476,10 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelOrder.transportMode = unasOrder.shipping != null ? unasOrder.shipping.name : "";
       ugyvitelOrder.topComment = "";
       ugyvitelOrder.bottomComment = "";
-      if(unasOrder.Items != null){
+      if(unasOrder.items.item != null){
         ugyvitelOrder.details = new Details();
         ugyvitelOrder.details.detail = new ArrayList<>();
-        for (Item item : unasOrder.Items.item) {
+        for (Item item : unasOrder.items.item) {
           Detail detail = new Detail();
           detail.webshopId = "";
           detail.productCode = item.sku;
