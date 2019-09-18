@@ -485,9 +485,9 @@ public class UnasApiServiceImpl implements UnasApiService {
           detail.productName = item.name;
           detail.quantity = item.quantity;
           detail.quantityUnit = item.unit;
-          detail.unitPrice = "";
+          detail.unitPrice = item.priceNet;
           detail.stock = "";
-          detail.productComment = "";
+          detail.productComment = ""; //ellenőrizni
           detail.vatCode = item.vat;
           ugyvitelOrder.details.detail.add(detail);
         }
