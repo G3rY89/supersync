@@ -84,6 +84,7 @@ public class UnasProduct {
 
     public UnasProduct(){
         this.stocks = new Stocks();
+        this.categories = new Categories();
     }
 
 }

@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import com.ks.supersync.model.ugyvitel.category.UgyvitelCategories;
+import com.ks.supersync.model.ugyvitel.category.UgyvitelCategory;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomer;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomers;
 import com.ks.supersync.model.ugyvitel.order.UgyvitelOrder;
@@ -21,13 +23,14 @@ import com.ks.supersync.model.ugyvitel.product.PriceRule;
 import com.ks.supersync.model.ugyvitel.product.Stock;
 import com.ks.supersync.model.ugyvitel.product.UgyvitelProduct;
 import com.ks.supersync.model.ugyvitel.product.UgyvitelProducts;
+import com.ks.supersync.model.unas.category.UnasCategories;
+import com.ks.supersync.model.unas.category.UnasCategory;
 import com.ks.supersync.model.unas.customer.UnasCustomer;
 import com.ks.supersync.model.unas.customer.UnasCustomers;
 import com.ks.supersync.model.unas.order.Comment;
 import com.ks.supersync.model.unas.order.Item;
 import com.ks.supersync.model.unas.order.UnasOrder;
 import com.ks.supersync.model.unas.order.UnasOrders;
-import com.ks.supersync.model.unas.product.Categories;
 import com.ks.supersync.model.unas.product.Category;
 import com.ks.supersync.model.unas.product.Description;
 import com.ks.supersync.model.unas.product.Price;
@@ -234,7 +237,56 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     return response.body().string();
   }
-  
+
+  @Override
+  public Object sendUgyvitelCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException {
+   
+    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCategories.class);
+    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    StringReader reader = new StringReader(Categories);
+
+    UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) jaxbUnmarshaller.unmarshal(reader);
+
+    MediaType mediaType = MediaType.parse("application/xml");
+
+    jaxbContext = JAXBContext.newInstance(UnasCategories.class);
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    StringWriter sw = new StringWriter();
+    jaxbMarshaller.marshal(mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories), sw);
+
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
+
+    Request setCategoryRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CATEGORIES.toString())
+        .post(body)
+        .addHeader("ApiKey", apiKey)
+        .build();
+    Response response = client.newCall(setCategoryRequest).execute();
+
+    return response.body().string();
+  }
+
+  private Object mapUgyvitelCategoriesToUnasCategories(UgyvitelCategories ugyvitelCategories) {
+
+    UnasCategories unasCategories = new UnasCategories();
+
+    for (UgyvitelCategory ugyvitelCategory : ugyvitelCategories.categories) {
+      UnasCategory unasCategory = new UnasCategory();
+
+      unasCategory.id = ugyvitelCategory.id;
+      unasCategory.name = ugyvitelCategory.name;
+      unasCategory.display.menu = ugyvitelCategory.visible == "1" ? "yes" : "no";
+      unasCategory.display.page = ugyvitelCategory.visible == "1" ? "yes" : "no";
+      unasCategory.parent.id = ugyvitelCategory.parentId;
+      unasCategory.order = ugyvitelCategory.categoryOrder;
+
+      unasCategories.category.add(unasCategory);
+    }
+
+    return unasCategories;
+  }
+
   private Object mapUgyvitelStocksToUnasStocks(UgyvitelProducts ugyvitelProducts) {
     
     UnasProducts unasProducts = new UnasProducts();
@@ -512,40 +564,52 @@ public class UnasApiServiceImpl implements UnasApiService {
 
       unasProduct.sku = ugyvitelProduct.productCode;
       unasProduct.name = ugyvitelProduct.productName.pName;
-      unasProduct.unit = ugyvitelProduct.quantityUnit.TranslatedQuantityUnit.get(0); //felülvizsgálni
-      /* unasProduct.minimumQty = 0;
-      unasProduct.maximumQty = 0; */
-      unasProduct.description.shortDesc = ugyvitelProduct.comment.comment.get(0); //felülvizsgálni
+      unasProduct.unit = ugyvitelProduct.quantityUnit.TranslatedQuantityUnit.get(0);
+      unasProduct.description.shortDesc = ugyvitelProduct.comment.comment.get(0);
       unasProduct.description.longDesc = "";
       unitPrice.type = "normal";
       unitPrice.net = ugyvitelProduct.unitPrice;
-      unitPrice.gross = "0"; //felülvizsgálni
+      //unitPrice.gross = "0";
       unasProduct.Prices.prices.add(unitPrice);
+      Price unasSalePrice = new Price();
+      unasSalePrice.type = "sale";
+      unasSalePrice.net = ugyvitelProduct.discountPrice;
+      unasProduct.Prices.prices.add(unasSalePrice);
       if(ugyvitelProduct.priceRules != null){          
         if(ugyvitelProduct.priceRules.priceRule != null){
           for (PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
-            Price uPrice = new Price();
-            uPrice.type = pRule.priceRuleName; //felülvizsgálni
-            uPrice.net = pRule.price; //felülvizsgálni
-            uPrice.gross = "345"; //kötelező mező
-            uPrice.start = pRule.validFrom; //felülvizsgálni
-            uPrice.end = pRule.validTo; //felülvizsgálni
-            unasProduct.Prices.prices.add(uPrice);
+            if(pRule.priceRuleName.equals("Egységár")){
+              continue;
+            } else {
+              if(pRule.price.equals(ugyvitelProduct.discountPrice)){
+                for (Price unasPrices : unasProduct.Prices.prices) {
+                  if(unasPrices.type.equals("sale")){
+                    unasPrices.saleStart = pRule.validFrom;
+                    unasPrices.saleEnd = pRule.validTo;
+                  }
+                }
+              } else {
+                Price unasPrice = new Price();
+                unasPrice.type =  "special"; //felülvizsgálni
+                unasPrice.net = pRule.price; //felülvizsgálni
+                //unasPrice.gross = "345"; //kötelező mező
+                unasPrice.start = pRule.validFrom; //felülvizsgálni
+                unasPrice.end = pRule.validTo; //felülvizsgálni
+                unasProduct.Prices.prices.add(unasPrice);
+              }
+            }
           }
         }
       } else {
         unasProduct.Prices.prices.add(unitPrice);
       }
-      unasProduct.categories = new Categories();
-      unasProduct.categories.category = new ArrayList<>();
-      Category category = new Category();
-      category.id = 1;
-      category.name = "Teszt";
-      category.type = "base";
-      unasProduct.categories.category.add(category);
+      for (com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
+        Category unasCategory = new Category();
+        unasCategory.id = ugyvitelCatergoy.categoryId;
+        unasProduct.categories.category.add(unasCategory);
+      }
       unasProducts.products.add(unasProduct);
     }
-
     return unasProducts;
   }
 }

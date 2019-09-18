@@ -42,6 +42,8 @@ public class UgyvitelProduct {
     public PriceRules priceRules;
     @XmlElement(name = "Stocks")
     public Stocks stocks;
+    @XmlElement(name = "Categories")
+    public Categories categories;
 
     public UgyvitelProduct(){
         this.productName = new ProductName();
@@ -50,6 +52,7 @@ public class UgyvitelProduct {
         this.priceRules = new PriceRules();
         this.productName = new ProductName();
         this.stocks = new Stocks();
+        this.categories = new Categories();
     }
 
     @Override

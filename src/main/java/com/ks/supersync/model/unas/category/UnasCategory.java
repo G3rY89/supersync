@@ -34,4 +34,9 @@ public class UnasCategory {
     public Meta meta;
     @XmlElement(name = "Image")
     public Image image;
+
+    public UnasCategory(){
+        this.display = new Display();
+        this.parent = new Parent();
+    }
 }

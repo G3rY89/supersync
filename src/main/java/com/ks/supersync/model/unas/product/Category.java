@@ -8,7 +8,7 @@ public class Category {
     @XmlElement(name = "Type")
     public String type;
     @XmlElement(name = "Id")
-    public Integer id;
+    public String id;
     @XmlElement(name = "Name")
     public String name;
 }
