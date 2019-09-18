@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class Group {
 
     @XmlElement(name = "Id")
-    public Integer id;
+    public String id;
     @XmlElement(name = "Name")
     public String name;
 }

@@ -1,5 +1,6 @@
 package com.ks.supersync.model.unas.customer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -16,4 +17,10 @@ public class Addresses {
     public Shipping shipping;
     @XmlElement(name = "Others")
     public List<Other> others;
+
+    public Addresses(){
+        this.invoice = new Invoice();
+        this.shipping = new Shipping();
+        this.others = new ArrayList<>();
+    }
 }

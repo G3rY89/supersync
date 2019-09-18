@@ -7,7 +7,7 @@ public class Other {
     @XmlElement(name = "Name")
     public String name;
     @XmlElement(name = "ZIP")
-    public Integer ZIP;
+    public String ZIP;
     @XmlElement(name = "City")
     public String city;
     @XmlElement(name = "Street")

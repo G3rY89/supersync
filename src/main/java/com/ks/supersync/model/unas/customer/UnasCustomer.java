@@ -45,5 +45,7 @@ public class UnasCustomer {
 
     public UnasCustomer(){
         this.contact = new Contact();
+        this.addresses = new Addresses();
+        this.group = new Group();
     }
 }

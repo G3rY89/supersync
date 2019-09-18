@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class UgyvitelCustomer {
 
     @XmlElement(name = "CustomerId")
-    public Integer customerId;
+    public String customerId;
     @XmlElement(name = "WebshopId")
     public String webshopId;
     @XmlElement(name = "CustomerCode")
@@ -60,6 +60,8 @@ public class UgyvitelCustomer {
     public String deliveryNumber;
     @XmlElement(name = "DeliveryBuilding")
     public String deliveryBuilding;
+    @XmlElement(name = "OtherAddresses")
+    public OtherAddresses otherAddresses;
     @XmlElement(name = "TaxNumber")
     public String taxNumber;
     @XmlElement(name = "EuTaxNumber")
@@ -94,6 +96,5 @@ public class UgyvitelCustomer {
     public String vatCode;
     @XmlElement(name = "Categories")
     public Categories categories;
-    
     
 }

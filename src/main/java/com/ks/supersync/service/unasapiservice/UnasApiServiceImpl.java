@@ -13,6 +13,8 @@ import javax.xml.bind.Unmarshaller;
 
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategories;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategory;
+import com.ks.supersync.model.ugyvitel.customer.OtherAddress;
+import com.ks.supersync.model.ugyvitel.customer.OtherAddresses;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomer;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomers;
 import com.ks.supersync.model.ugyvitel.order.UgyvitelOrder;
@@ -27,6 +29,7 @@ import com.ks.supersync.model.unas.category.UnasCategories;
 import com.ks.supersync.model.unas.category.UnasCategory;
 import com.ks.supersync.model.unas.customer.UnasCustomer;
 import com.ks.supersync.model.unas.customer.UnasCustomers;
+import com.ks.supersync.model.unas.customer.addresses.Other;
 import com.ks.supersync.model.unas.order.Comment;
 import com.ks.supersync.model.unas.order.Item;
 import com.ks.supersync.model.unas.order.UnasOrder;
@@ -353,16 +356,19 @@ public class UnasApiServiceImpl implements UnasApiService {
       // group and params missing 
       unasOrder.currency = ugyvitelOrder.currency;
       unasOrder.payment.name = ugyvitelOrder.paymentmethod;
+
       if(ugyvitelOrder.bottomComment != null){
         Comment comment = new Comment();
         comment.text = ugyvitelOrder.bottomComment;
         unasOrder.comments.comments.add(comment);
       }
+
       if(ugyvitelOrder.topComment!= null){
         Comment comment = new Comment();
         comment.text = ugyvitelOrder.topComment;
         unasOrder.comments.comments.add(comment);
       }
+
       for (Detail detail : ugyvitelOrder.details.detail){
         Item item = new Item();
         item.sku = detail.productCode;
@@ -374,6 +380,7 @@ public class UnasApiServiceImpl implements UnasApiService {
         item.vat = detail.vatCode;
         unasOrder.items.item.add(item);
       }
+
       unasOrders.orders.add(unasOrder);
     }
     return unasOrders;
@@ -386,12 +393,56 @@ public class UnasApiServiceImpl implements UnasApiService {
     unasCustomers.customer = new ArrayList<>();
 
     for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
+
       UnasCustomer unasCustomer = new UnasCustomer();
 
+      unasCustomer.id = ugyvitelCustomer.customerId;
       unasCustomer.email = ugyvitelCustomer.email;
       unasCustomer.contact.name = ugyvitelCustomer.contactName;
       unasCustomer.contact.phone = ugyvitelCustomer.phone;
       unasCustomer.contact.mobile = ugyvitelCustomer.phone != null ? ugyvitelCustomer.phone : "";
+      unasCustomer.addresses.invoice.ZIP = ugyvitelCustomer.centralZip;
+      unasCustomer.addresses.invoice.city = ugyvitelCustomer.centralCity;
+      unasCustomer.addresses.invoice.country = ugyvitelCustomer.centralCountry;
+      unasCustomer.addresses.invoice.name = ugyvitelCustomer.centralAddressName;
+      unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
+      unasCustomer.addresses.invoice.streetType = ugyvitelCustomer.centralPublicDomain;
+      unasCustomer.addresses.invoice.streetNumber = ugyvitelCustomer.centralNumber;
+      unasCustomer.addresses.invoice.taxNumber = ugyvitelCustomer.taxNumber;
+      unasCustomer.addresses.invoice.euTaxNumber = ugyvitelCustomer.euTaxNumber;
+      unasCustomer.addresses.shipping.ZIP = ugyvitelCustomer.deliveryZip;
+      unasCustomer.addresses.shipping.city = ugyvitelCustomer.deliveryCity;
+      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountry;
+      unasCustomer.addresses.shipping.name = ugyvitelCustomer.deliveryAddressName;
+      unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
+      unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
+      unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
+
+      if(ugyvitelCustomer.otherAddresses != null && ugyvitelCustomer.otherAddresses.otherAddress != null){
+        for (OtherAddress ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) {
+          Other unasOtherAddress = new Other();
+
+          unasOtherAddress.ZIP = ugyvitelOtherAddress.otherZip;
+          unasOtherAddress.city = ugyvitelOtherAddress.otherCity;
+          unasOtherAddress.country = ugyvitelOtherAddress.otherCountry;
+          unasOtherAddress.name = ugyvitelOtherAddress.otherAddressName;
+          unasOtherAddress.streetName = ugyvitelOtherAddress.otherStreet;
+          unasOtherAddress.streetType = ugyvitelOtherAddress.otherPublicDomain;
+          unasOtherAddress.streetNumber = ugyvitelOtherAddress.otherNumber;
+
+          unasCustomer.addresses.others.add(unasOtherAddress);
+        }
+      }
+
+      if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category !=null){
+        for (com.ks.supersync.model.ugyvitel.customer.Category ugyvitelCategory : ugyvitelCustomer.categories.category) {
+          if(ugyvitelCategory.isBaseCategory.equals("true")){
+            unasCustomer.group.id = ugyvitelCategory.categoryId;
+            unasCustomer.group.name = ugyvitelCategory.categoryValue;
+          }
+        }
+      }
+
       unasCustomers.customer.add(unasCustomer);
     }
     return unasCustomers;
@@ -477,6 +528,7 @@ public class UnasApiServiceImpl implements UnasApiService {
         ugyvitelCustomer.deliveryFloor= "";
         ugyvitelCustomer.deliveryNumber = unasCustomer.addresses.shipping.streetNumber;
         ugyvitelCustomer.deliveryBuilding = "";
+
         ugyvitelCustomers.customer.add(ugyvitelCustomer);
     }
 
