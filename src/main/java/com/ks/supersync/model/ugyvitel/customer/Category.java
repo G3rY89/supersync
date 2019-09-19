@@ -1,13 +1,13 @@
 package com.ks.supersync.model.ugyvitel.customer;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.*;
 
 public class Category {
 
-    @XmlAttribute(name = "CategoryId")
+    @XmlElement(name = "CategoryId")
     public String categoryId;
-    @XmlAttribute(name = "CategoryValue")
+    @XmlElement(name = "CategoryValue")
     public String categoryValue;
-    @XmlAttribute(name = "IsBaseCategory")
+    @XmlElement(name = "IsBaseCategory")
     public String isBaseCategory;
 }
