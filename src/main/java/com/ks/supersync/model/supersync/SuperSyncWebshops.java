@@ -28,8 +28,8 @@ public class SuperSyncWebshops{
     public SuperSyncWebshops(String webIdentifier, String webPassword, String webshopName, String webshopApikey){
         this.webIdentifier = webIdentifier;
         this.webPassword = webPassword;
-        this.webshopName = webshopName;
         this.webshopApiKey = webshopApikey;
+        this.webshopName = webshopName;
     }
 
     public SuperSyncWebshops(String webIdentifier, String webPassword, String webshopName, String webshopUsername, String webshopPassword){
