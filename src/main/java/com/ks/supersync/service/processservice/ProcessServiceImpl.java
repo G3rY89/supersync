@@ -18,10 +18,10 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Processes getProcesses(String webIdentifier, String webPassword) {
+    public Processes getProcesses(String webIdentifier, String webPassword, String apiKey) {
         
         if(superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword) != null){
-            return processRepository.findByapiKey(webIdentifier);
+            return processRepository.findByapiKey(apiKey);
         }
         return null;
     }

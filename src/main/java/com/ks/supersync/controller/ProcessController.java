@@ -18,7 +18,7 @@ public class ProcessController{
     ProcessService processService;
 
     @RequestMapping(value = "/processes", method = RequestMethod.GET, produces = "application/xml")
-    public Processes activateWebshop(@RequestHeader("WebIdentifier") String webIdentifier, @RequestHeader("webPassword") String webPassword){
-            return processService.getProcesses(webIdentifier, webPassword);
+    public Processes getProcesses(@RequestHeader("webIdentifier") String webIdentifier, @RequestHeader("webPassword") String webPassword,  @RequestHeader("apiKey") String apiKey){
+            return processService.getProcesses(webIdentifier, webPassword, apiKey);
     } 
 }
