@@ -408,40 +408,6 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
       unasCustomer.addresses.invoice.streetType = ugyvitelCustomer.centralPublicDomain;
       unasCustomer.addresses.invoice.streetNumber = ugyvitelCustomer.centralNumber;
-      unasCustomer.addresses.invoice.taxNumber = ugyvitelCustomer.taxNumber;
-      unasCustomer.addresses.invoice.euTaxNumber = ugyvitelCustomer.euTaxNumber;
-      unasCustomer.addresses.shipping.ZIP = ugyvitelCustomer.deliveryZip;
-      unasCustomer.addresses.shipping.city = ugyvitelCustomer.deliveryCity;
-      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountry;
-      unasCustomer.addresses.shipping.name = ugyvitelCustomer.deliveryAddressName;
-      unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
-      unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
-      unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
-
-      if(ugyvitelCustomer.otherAddresses != null && ugyvitelCustomer.otherAddresses.otherAddress != null){
-        for (OtherAddress ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) {
-          Other unasOtherAddress = new Other();
-
-          unasOtherAddress.ZIP = ugyvitelOtherAddress.otherZip;
-          unasOtherAddress.city = ugyvitelOtherAddress.otherCity;
-          unasOtherAddress.country = ugyvitelOtherAddress.otherCountry;
-          unasOtherAddress.name = ugyvitelOtherAddress.otherAddressName;
-          unasOtherAddress.streetName = ugyvitelOtherAddress.otherStreet;
-          unasOtherAddress.streetType = ugyvitelOtherAddress.otherPublicDomain;
-          unasOtherAddress.streetNumber = ugyvitelOtherAddress.otherNumber;
-
-          unasCustomer.addresses.others.add(unasOtherAddress);
-        }
-      }
-
-      if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category !=null){
-        for (com.ks.supersync.model.ugyvitel.customer.Category ugyvitelCategory : ugyvitelCustomer.categories.category) {
-          if(ugyvitelCategory.isBaseCategory.equals("true")){
-            unasCustomer.group.id = ugyvitelCategory.categoryId;
-            unasCustomer.group.name = ugyvitelCategory.categoryValue;
-          }
-        }
-      }
 
       unasCustomers.customer.add(unasCustomer);
     }
@@ -528,6 +494,31 @@ public class UnasApiServiceImpl implements UnasApiService {
         ugyvitelCustomer.deliveryFloor= "";
         ugyvitelCustomer.deliveryNumber = unasCustomer.addresses.shipping.streetNumber;
         ugyvitelCustomer.deliveryBuilding = "";
+
+       /*  if(ugyvitelCustomer.otherAddresses != null && ugyvitelCustomer.otherAddresses.otherAddress != null){
+          for (OtherAddress ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) {
+            Other unasOtherAddress = new Other();
+  
+            unasOtherAddress.ZIP = ugyvitelOtherAddress.otherZip;
+            unasOtherAddress.city = ugyvitelOtherAddress.otherCity;
+            unasOtherAddress.country = ugyvitelOtherAddress.otherCountry;
+            unasOtherAddress.name = ugyvitelOtherAddress.otherAddressName;
+            unasOtherAddress.streetName = ugyvitelOtherAddress.otherStreet;
+            unasOtherAddress.streetType = ugyvitelOtherAddress.otherPublicDomain;
+            unasOtherAddress.streetNumber = ugyvitelOtherAddress.otherNumber;
+  
+            unasCustomer.addresses.others.add(unasOtherAddress);
+          }
+        }
+  
+        if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category !=null){
+          for (com.ks.supersync.model.ugyvitel.customer.Category ugyvitelCategory : ugyvitelCustomer.categories.category) {
+            if(ugyvitelCategory.isBaseCategory.equals("true")){
+              unasCustomer.group.id = ugyvitelCategory.categoryId;
+              unasCustomer.group.name = ugyvitelCategory.categoryValue;
+            }
+          }
+        } */
 
         ugyvitelCustomers.customer.add(ugyvitelCustomer);
     }

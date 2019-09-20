@@ -25,7 +25,7 @@ public class SuperSyncWebshops{
     @Column(nullable = true, unique = true)
     public String webshopPassword;
 
-    public SuperSyncWebshops(String webIdentifier, String webPassword, String webshopName, String webshopApikey){
+    public SuperSyncWebshops(String webIdentifier, String webPassword, String webshopApikey, String webshopName){
         this.webIdentifier = webIdentifier;
         this.webPassword = webPassword;
         this.webshopApiKey = webshopApikey;
