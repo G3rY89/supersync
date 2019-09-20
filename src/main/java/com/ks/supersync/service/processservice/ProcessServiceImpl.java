@@ -21,7 +21,7 @@ public class ProcessServiceImpl implements ProcessService {
     public Processes getProcesses(String webIdentifier, String webPassword) {
         
         if(superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword) != null){
-            return processRepository.findBywebIdentifier(webIdentifier);
+            return processRepository.findByapiKey(webIdentifier);
         }
         return null;
     }
