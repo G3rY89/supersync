@@ -23,7 +23,7 @@ public class Processes {
     public Integer id;
     @Column(nullable = false, unique = true)
     @XmlTransient
-    public String webIdentifier;
+    public String apiKey;
     @Column(nullable = false, unique = true)
     @XmlElement(name = "DOWNLOAD_PRODUCT")
     public Integer getProduct;
