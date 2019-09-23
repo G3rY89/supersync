@@ -25,13 +25,14 @@ public class SuperSyncController {
             return webShopService.getItemsForUgyvitel(webIdentifier, webPassword, webShop, syncType);
     }
 
-    @RequestMapping(value = "/sync_from_ugyvitel", method = RequestMethod.POST, produces = "application/xml", consumes = "text/xml")
+    @RequestMapping(value = "/sync_from_ugyvitel", method = RequestMethod.POST, produces = "application/xml", consumes = "application/xml")
     public Object syncFromUgyvitel(
         @RequestHeader("WebIdentifier") String webIdentifier, 
         @RequestHeader("WebPassword") String webPassword, 
         @RequestHeader("Webshop") String webShop,
         @RequestHeader("SyncType") String syncType,
         @RequestBody String item) throws IOException, JAXBException{
+            System.out.println(item);
             return webShopService.sendItemsFromUgyvitel(webIdentifier, webPassword, webShop, syncType, item);
     }
 }
