@@ -405,7 +405,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCustomer.addresses.invoice.ZIP = ugyvitelCustomer.centralZip;
       unasCustomer.addresses.invoice.city = ugyvitelCustomer.centralCity;
       unasCustomer.addresses.invoice.country = ugyvitelCustomer.centralCountry;
-      unasCustomer.addresses.invoice.countryCode = ugyvitelCustomer.countryCode;
+      unasCustomer.addresses.invoice.countryCode = ugyvitelCustomer.countryCode.toLowerCase();
       unasCustomer.addresses.invoice.name = ugyvitelCustomer.centralAddressName != null ? ugyvitelCustomer.centralAddressName : ugyvitelCustomer.customerName;
       if(ugyvitelCustomer.centralPublicDomain == null){
         unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
@@ -417,7 +417,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCustomer.addresses.shipping.ZIP = ugyvitelCustomer.deliveryZip;
       unasCustomer.addresses.shipping.city = ugyvitelCustomer.deliveryCity;
       unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountry;
-      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountryCode;
+      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountryCode.toLowerCase();
       unasCustomer.addresses.shipping.name = ugyvitelCustomer.deliveryAddressName != null ? ugyvitelCustomer.deliveryAddressName : ugyvitelCustomer.customerName;
       if(ugyvitelCustomer.deliveryPublicDomain == null){
         unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
