@@ -417,7 +417,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCustomer.addresses.shipping.ZIP = ugyvitelCustomer.deliveryZip;
       unasCustomer.addresses.shipping.city = ugyvitelCustomer.deliveryCity;
       unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountry;
-      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountryCode.toLowerCase();
+      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountryCode != null ? ugyvitelCustomer.deliveryCountryCode.toLowerCase() : "";
       unasCustomer.addresses.shipping.name = ugyvitelCustomer.deliveryAddressName != null ? ugyvitelCustomer.deliveryAddressName : ugyvitelCustomer.customerName;
       if(ugyvitelCustomer.deliveryPublicDomain == null){
         unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
