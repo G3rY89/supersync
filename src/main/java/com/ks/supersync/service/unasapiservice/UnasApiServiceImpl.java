@@ -428,6 +428,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       }
 
 
+      System.out.println(unasCustomer.contact.name);
       unasCustomers.customer.add(unasCustomer);
     }
     return unasCustomers;
