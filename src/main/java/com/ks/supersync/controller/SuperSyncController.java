@@ -25,7 +25,7 @@ public class SuperSyncController {
             return webShopService.getItemsForUgyvitel(webIdentifier, webPassword, webShop, syncType);
     }
 
-    @RequestMapping(value = "/sync_from_ugyvitel", method = RequestMethod.POST, produces = "application/xml", consumes = "application/xml")
+    @RequestMapping(value = "/sync_from_ugyvitel", method = RequestMethod.POST, produces = "application/xml", consumes = "text/xml")
     public Object syncFromUgyvitel(
         @RequestHeader("WebIdentifier") String webIdentifier, 
         @RequestHeader("WebPassword") String webPassword, 
