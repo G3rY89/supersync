@@ -14,9 +14,9 @@ public class UgyvitelCustomer {
     public String customerName;
     @XmlElement(name = "Email")
     public String email;
-    @XmlElement(name = "CountryCode")
-    public String contactName;
     @XmlElement(name = "ContactName")
+    public String contactName;
+    @XmlElement(name = "CountryCode")
     public String countryCode;
     @XmlElement(name = "CentralAddressName")
     public String centralAddressName;
