@@ -401,7 +401,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCustomer.contact.name = ugyvitelCustomer.customerName;
       unasCustomer.contact.phone = ugyvitelCustomer.phone;
       unasCustomer.contact.mobile = ugyvitelCustomer.phone != null ? ugyvitelCustomer.phone : "";
-      unasCustomer.contact.lang = "hu";
+      unasCustomer.contact.lang = ugyvitelCustomer.countryCode;
       unasCustomer.addresses.invoice.ZIP = ugyvitelCustomer.centralZip;
       unasCustomer.addresses.invoice.city = ugyvitelCustomer.centralCity;
       unasCustomer.addresses.invoice.country = ugyvitelCustomer.centralCountry;
