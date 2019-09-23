@@ -62,6 +62,8 @@ public class UgyvitelCustomer {
     public String deliveryNumber;
     @XmlElement(name = "DeliveryBuilding")
     public String deliveryBuilding;
+    @XmlElement(name = "DeliveryCountryCode")
+    public String deliveryCountryCode;
     @XmlElement(name = "OtherAddresses")
     public OtherAddresses otherAddresses;
     @XmlElement(name = "TaxNumber")
