@@ -32,6 +32,7 @@ public class SuperSyncController {
         @RequestHeader("Webshop") String webShop,
         @RequestHeader("SyncType") String syncType,
         @RequestBody String item) throws IOException, JAXBException{
+            System.out.println(item);
             return webShopService.sendItemsFromUgyvitel(webIdentifier, webPassword, webShop, syncType, item);
     }
 }
