@@ -426,9 +426,6 @@ public class UnasApiServiceImpl implements UnasApiService {
         unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
         unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
       }
-
-
-      System.out.println(unasCustomer.contact.name);
       unasCustomers.customer.add(unasCustomer);
     }
     return unasCustomers;
