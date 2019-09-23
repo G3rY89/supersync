@@ -279,8 +279,8 @@ public class UnasApiServiceImpl implements UnasApiService {
 
       unasCategory.id = ugyvitelCategory.id;
       unasCategory.name = ugyvitelCategory.name;
-      unasCategory.display.menu = ugyvitelCategory.visible == "1" ? "yes" : "no";
-      unasCategory.display.page = ugyvitelCategory.visible == "1" ? "yes" : "no";
+      unasCategory.display.menu = ugyvitelCategory.visible.equals("1")  ? "yes" : "no";
+      unasCategory.display.page = ugyvitelCategory.visible.equals("1")  ? "yes" : "no";
       unasCategory.parent.id = ugyvitelCategory.parentId;
       unasCategory.order = ugyvitelCategory.categoryOrder;
 
