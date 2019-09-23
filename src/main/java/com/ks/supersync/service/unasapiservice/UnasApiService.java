@@ -25,5 +25,5 @@ public interface UnasApiService {
 
     public Object sendUgyvitelStockToUnas(String apiKey, String Products) throws IOException, JAXBException;
 
-    public Object sendUgyvitelCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException;
+    public Object sendUgyvitelProductCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException;
 }

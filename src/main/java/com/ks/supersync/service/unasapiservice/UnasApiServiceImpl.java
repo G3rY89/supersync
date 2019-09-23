@@ -242,7 +242,7 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public Object sendUgyvitelCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException {
+  public Object sendUgyvitelProductCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException {
    
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCategories.class);
     Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
