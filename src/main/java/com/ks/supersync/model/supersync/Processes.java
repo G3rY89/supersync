@@ -43,10 +43,10 @@ public class Processes {
     @XmlElement(name = "UploadOrder")
     public Integer setOrder;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DownloadProductCategories")
-    public Integer getProductCategories;
+    @XmlElement(name = "UploadProductCategories")
+    public Integer setProductCategories;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DownloadStock")
-    public Integer getStock;
+    @XmlElement(name = "UploadStock")
+    public Integer setStock;
 
 }
