@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Entity
 @Table(name = "processes")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Processes")
+@XmlRootElement(name = "SyncProcesses")
 public class Processes {
 
     @Id
