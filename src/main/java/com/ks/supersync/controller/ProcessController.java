@@ -19,7 +19,7 @@ public class ProcessController{
     ProcessService processService;
 
     @RequestMapping(value = "/processes", method = RequestMethod.GET, produces = "application/xml")
-    public SyncProcesses getProcesses(@RequestHeader("webIdentifier") String webIdentifier, @RequestHeader("webPassword") String webPassword,  @RequestHeader("apiKey") String apiKey){
+    public Processes getProcesses(@RequestHeader("webIdentifier") String webIdentifier, @RequestHeader("webPassword") String webPassword,  @RequestHeader("apiKey") String apiKey){
             return processService.getProcesses(webIdentifier, webPassword, apiKey);
     } 
 }

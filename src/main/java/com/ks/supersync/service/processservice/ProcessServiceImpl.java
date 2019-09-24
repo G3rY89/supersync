@@ -1,6 +1,6 @@
 package com.ks.supersync.service.processservice;
 
-import com.ks.supersync.model.supersync.SyncProcesses;
+import com.ks.supersync.model.supersync.Processes;
 import com.ks.supersync.repository.ProcessRepository;
 import com.ks.supersync.repository.SuperSyncUserRepository;
 
@@ -18,13 +18,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public SyncProcesses getProcesses(String webIdentifier, String webPassword, String apiKey) {
+    public Processes getProcesses(String webIdentifier, String webPassword, String apiKey) {
         
         if(superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword) != null){
 
-            SyncProcesses result = new SyncProcesses();
-            result.processes.add(processRepository.findByapiKey(apiKey));
-            return result;
+            return processRepository.findByapiKey(apiKey);
+            
         }
         return null;
     }
