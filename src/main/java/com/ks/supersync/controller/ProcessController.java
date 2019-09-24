@@ -1,7 +1,6 @@
 package com.ks.supersync.controller;
 
 import com.ks.supersync.model.supersync.Processes;
-import com.ks.supersync.model.supersync.SyncProcesses;
 import com.ks.supersync.service.processservice.ProcessService;
 
 import org.springframework.beans.factory.annotation.Autowired;
