@@ -1,9 +1,9 @@
 package com.ks.supersync.service.processservice;
 
-import com.ks.supersync.model.supersync.Processes;
+import com.ks.supersync.model.supersync.SyncProcesses;
 
 public interface ProcessService {
 
-    Processes getProcesses(String webIdentifier, String webPassword, String apiKey); 
+    SyncProcesses getProcesses(String webIdentifier, String webPassword, String apiKey); 
 
 }

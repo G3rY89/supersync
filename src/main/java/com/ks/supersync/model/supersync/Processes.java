@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Entity
 @Table(name = "processes")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "SYNCPROCESSES")
 public class Processes {
 
     @Id
@@ -25,28 +24,28 @@ public class Processes {
     @XmlTransient
     public String apiKey;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DOWNLOAD_PRODUCT")
+    @XmlElement(name = "DownloadProduct")
     public Integer getProduct;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "UPLOAD_PRODUCT")
+    @XmlElement(name = "UploadProduct")
     public Integer setProduct;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DOWNLOAD_CUSTOMER")
+    @XmlElement(name = "DownloadCustomer")
     public Integer getCustomer;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "UPLOAD_CUSTOMER") 
+    @XmlElement(name = "UploadCustomer") 
     public Integer setCustomer;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DOWNLOAD_ORDER")
+    @XmlElement(name = "DownloadOrder")
     public Integer getOrder;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "UPLOAD_ORDER")
+    @XmlElement(name = "UploadOrder")
     public Integer setOrder;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DOWNLOAD_PRODUCTCATEGORIES")
+    @XmlElement(name = "DownloadProductCategories")
     public Integer getProductCategories;
     @Column(nullable = false, unique = true)
-    @XmlElement(name = "DOWNLOAD_STOCK")
+    @XmlElement(name = "DownloadStock")
     public Integer getStock;
 
 }
