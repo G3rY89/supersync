@@ -1,6 +1,7 @@
 package com.ks.supersync.controller;
 
 import com.ks.supersync.model.supersync.Processes;
+import com.ks.supersync.model.supersync.SyncProcesses;
 import com.ks.supersync.service.processservice.ProcessService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class ProcessController{
     ProcessService processService;
 
     @RequestMapping(value = "/processes", method = RequestMethod.GET, produces = "application/xml")
-    public Processes getProcesses(@RequestHeader("webIdentifier") String webIdentifier, @RequestHeader("webPassword") String webPassword,  @RequestHeader("apiKey") String apiKey){
+    public SyncProcesses getProcesses(@RequestHeader("webIdentifier") String webIdentifier, @RequestHeader("webPassword") String webPassword,  @RequestHeader("apiKey") String apiKey){
             return processService.getProcesses(webIdentifier, webPassword, apiKey);
     } 
 }
