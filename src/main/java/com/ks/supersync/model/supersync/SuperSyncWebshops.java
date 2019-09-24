@@ -11,10 +11,11 @@ public class SuperSyncWebshops{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false, unique = true)
     public Integer id;
     @Column(nullable = false, unique = false)
     public String webIdentifier;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     public String webPassword;
     @Column(nullable = false, unique = false)
     public String webshopName;

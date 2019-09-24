@@ -6,8 +6,8 @@ import javax.xml.bind.JAXBException;
 
 public interface WebshopService {
 
-    Object getItemsForUgyvitel(String webIdentifier, String webPassword, String webShop, String syncType) throws IOException, JAXBException;
+    Object getItemsForUgyvitel(String webIdentifier, String webPassword, String syncType, String ApiKey) throws IOException, JAXBException;
 
-    Object sendItemsFromUgyvitel(String webIdentifier, String webPassword, String webShop, String syncType, String Item) throws IOException, JAXBException;
+    Object sendItemsFromUgyvitel(String webIdentifier, String webPassword, String syncType, String ApiKey, String Item) throws IOException, JAXBException;
 
 }

@@ -20,7 +20,8 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     public Processes getProcesses(String webIdentifier, String webPassword, String apiKey) {
         
-        if(superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword) != null){
+        if(superSyncUserRepository.findByWebIdentifierAndWebPasswordAndWebshopApiKey(webIdentifier, webPassword,
+                apiKey) != null) {
 
             return processRepository.findByapiKey(apiKey);
             

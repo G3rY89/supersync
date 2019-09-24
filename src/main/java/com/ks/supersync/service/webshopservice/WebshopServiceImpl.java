@@ -24,37 +24,38 @@ public class WebshopServiceImpl implements WebshopService {
     }
 
     @Override
-    public Object getItemsForUgyvitel(String webIdentifier, String webPassword, String webShop, String syncType)
+    public Object getItemsForUgyvitel(String webIdentifier, String webPassword, String syncType, String ApiKey)
             throws IOException, JAXBException {
 
-                SuperSyncWebshops uWebshops = superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword);
+                SuperSyncWebshops uWebshops = superSyncUserRepository.findByWebIdentifierAndWebPasswordAndWebshopApiKey(webIdentifier, webPassword, ApiKey);
 
-                if(uWebshops != null){
-                    switch(uWebshops.webshopName){
-                        case "UNAS":
-                        switch(syncType){
-                            case "PRODUCT":
-                            return unasApiService.getUnasProductsToUgyvitel(uWebshops.webshopApiKey);
-    
-                            case "CUSTOMER":
-                            return unasApiService.getCustomersToUgyvitel(uWebshops.webshopApiKey);
-    
-                            case "ORDER":
-                            return unasApiService.getOrdersToUgyvitel(uWebshops.webshopApiKey);
-                        }
-                    }
+        if (uWebshops != null) {
+            switch (uWebshops.webshopName) {
+            case "UNAS":
+                switch (syncType) {
+                case "PRODUCT":
+                    return unasApiService.getUnasProductsToUgyvitel(uWebshops.webshopApiKey);
+
+                case "CUSTOMER":
+                    return unasApiService.getCustomersToUgyvitel(uWebshops.webshopApiKey);
+
+                case "ORDER":
+                    return unasApiService.getOrdersToUgyvitel(uWebshops.webshopApiKey);
                 }
+            }
+        }
 
         return null;
     }
 
     @Override
-    public Object sendItemsFromUgyvitel(String webIdentifier, String webPassword, String webShop, String syncType,
-            String Item) throws IOException, JAXBException {
+    public Object sendItemsFromUgyvitel(String webIdentifier, String webPassword, String syncType,
+            String ApiKey, String Item) throws IOException, JAXBException {
 
-                SuperSyncWebshops uWebshops = superSyncUserRepository.findByWebIdentifierAndWebPassword(webIdentifier, webPassword);
-       
-                switch(webShop){
+        SuperSyncWebshops uWebshops = superSyncUserRepository
+                .findByWebIdentifierAndWebPasswordAndWebshopApiKey(webIdentifier, webPassword, ApiKey);
+            if(uWebshops != null){
+                switch(uWebshops.webshopName){
                     case "UNAS":
                     switch(syncType){
                         case "PRODUCT":
@@ -73,6 +74,7 @@ public class WebshopServiceImpl implements WebshopService {
                         return unasApiService.sendUgyvitelProductCategoryToUnas(uWebshops.webshopApiKey, Item);
                     }
                 }
+            }
         return null;
     }
 
