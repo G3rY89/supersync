@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import com.ks.supersync.model.supersync.I18n;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategories;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategory;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomer;
@@ -37,6 +38,7 @@ import com.ks.supersync.model.unas.product.Price;
 import com.ks.supersync.model.unas.product.Prices;
 import com.ks.supersync.model.unas.product.UnasProduct;
 import com.ks.supersync.model.unas.product.UnasProducts;
+import com.ks.supersync.repository.I18nRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,12 @@ public class UnasApiServiceImpl implements UnasApiService {
 
   @Value("${unasapi.serviceurl}")
   private String unasapiServiceUrl;
+
+  private I18nRepository i18nRepository;
+
+  public UnasApiServiceImpl(I18nRepository i18nRepository){
+    this.i18nRepository = i18nRepository;
+  }
 
   @Override
   public UgyvitelProducts getUnasProductsToUgyvitel(String apiKey) throws IOException, JAXBException {
@@ -137,7 +145,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
       jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       StringWriter sw = new StringWriter();
-      jaxbMarshaller.marshal(mapUgyvitelProductsToUnasProducts(ugyvitelProducts), sw);
+      jaxbMarshaller.marshal(mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey), sw);
 
       RequestBody body = RequestBody.create(mediaType, sw.toString());
 
@@ -278,7 +286,6 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCategory.name = ugyvitelCategory.name;
       unasCategory.display.menu = ugyvitelCategory.visible.equals("1")  ? "yes" : "no";
       unasCategory.display.page = ugyvitelCategory.visible.equals("1")  ? "yes" : "no";
-      //unasCategory.parent.id = ugyvitelCategory.parentId;
       unasCategory.parent.tree = "webes szar";
       unasCategory.order = ugyvitelCategory.categoryOrder;
 
@@ -609,7 +616,9 @@ public class UnasApiServiceImpl implements UnasApiService {
     return ugyvitelOrders;
   }
 
-  private UnasProducts mapUgyvitelProductsToUnasProducts(UgyvitelProducts ugyvitelProducts){
+  private UnasProducts mapUgyvitelProductsToUnasProducts(UgyvitelProducts ugyvitelProducts, String apiKey){
+    I18n webshopI18n = i18nRepository.findByWebshopApiKey(apiKey);
+
     UnasProducts unasProducts = new UnasProducts();
 
     unasProducts.products = new ArrayList<>();

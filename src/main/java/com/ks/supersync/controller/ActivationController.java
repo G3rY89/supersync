@@ -18,7 +18,12 @@ public class ActivationController {
     ActivationService activationService;
 
     @RequestMapping(value = "/activate_webshop", method = RequestMethod.POST, produces = "application/xml")
-    public Result activateWebshop(@RequestHeader("WebIdentifier") String webIdentifier, @RequestHeader("Webshop") String webshop, @RequestHeader("ApiKey") String apiKey){
-            return activationService.enrollUser(webIdentifier, webshop, apiKey);
+    public Result activateWebshop(
+        @RequestHeader("WebIdentifier") String webIdentifier, 
+        @RequestHeader("Webshop") String webshop, 
+        @RequestHeader("ApiKey") String apiKey,
+        @RequestHeader("Currency") String currency,
+        @RequestHeader("Language") String language){
+            return activationService.enrollUser(webIdentifier, webshop, apiKey, currency, language);
     } 
 }
