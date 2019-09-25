@@ -1,8 +1,9 @@
 package com.ks.supersync.model.ugyvitel.product;
 
-import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import javax.xml.bind.annotation.*;
 
 
 public class UgyvitelProduct {
@@ -14,12 +15,11 @@ public class UgyvitelProduct {
     @XmlElement(name = "ProductCode")
     public String productCode;
     @XmlElement(name = "Name")
-    public ProductName productName;
+    public List<TranslatedName> productName;
     @XmlElement(name = "ItemNumber")
     public String itemNumber;
     @XmlElement(name = "Comment")
-    @Nullable
-    public Comment comment;
+    public List<TranslatedComment> comment;
     @XmlElement(name = "Barcode")
     public String barCode;
     @XmlElement(name = "LastPurchasePrice")
@@ -29,7 +29,7 @@ public class UgyvitelProduct {
     @XmlElement(name = "VatCode")
     public String vatCode;
     @XmlElement(name = "QuantityUnit")
-    public QuantityUnit quantityUnit;
+    public List<TranslatedQuantityUnit> quantityUnit;
     @XmlElement(name = "Service")
     public Integer service;
     @XmlElement(name = "UnitPrice")
@@ -46,11 +46,10 @@ public class UgyvitelProduct {
     public Categories categories;
 
     public UgyvitelProduct(){
-        this.productName = new ProductName();
-        this.comment = new Comment();
-        this.quantityUnit = new QuantityUnit();
+        this.productName = new ArrayList<>();
+        this.comment = new ArrayList<>();
+        this.quantityUnit = new ArrayList<>();
         this.priceRules = new PriceRules();
-        this.productName = new ProductName();
         this.stocks = new Stocks();
         this.categories = new Categories();
     }

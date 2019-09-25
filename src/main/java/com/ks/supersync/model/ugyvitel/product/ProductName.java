@@ -1,9 +1,17 @@
 package com.ks.supersync.model.ugyvitel.product;
 
-import javax.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.*;
 
 public class ProductName {
 
     @XmlElement(name = "TranslatedName")
-    public String pName;
+    @XmlAttribute(name = "LanguageId")
+    public List<TranslatedName> pName;
+
+    public ProductName(){
+        this.pName = new ArrayList<>();
+    }
 }
