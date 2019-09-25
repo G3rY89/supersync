@@ -100,5 +100,9 @@ public class UgyvitelCustomer {
     public String vatCode;
     @XmlElement(name = "Categories")
     public Categories categories;
+
+    public UgyvitelCustomer(){
+        this.categories = new Categories();
+    }
     
 }
