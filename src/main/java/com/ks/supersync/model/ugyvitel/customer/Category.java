@@ -10,4 +10,13 @@ public class Category {
     public String categoryValue;
     @XmlElement(name = "IsBaseCategory")
     public String isBaseCategory;
+
+    public Category(String categroryId, String CategoryValue){
+        this.categoryId = categroryId;
+        this.categoryValue =CategoryValue;
+    }
+
+    public Category(){
+        
+    }
 }

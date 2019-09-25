@@ -531,16 +531,13 @@ public class UnasApiServiceImpl implements UnasApiService {
   
             unasCustomer.addresses.others.add(unasOtherAddress);
           }
-        }
-  
-        if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category !=null){
-          for (com.ks.supersync.model.ugyvitel.customer.Category ugyvitelCategory : ugyvitelCustomer.categories.category) {
-            if(ugyvitelCategory.isBaseCategory.equals("true")){
-              unasCustomer.group.id = ugyvitelCategory.categoryId;
-              unasCustomer.group.name = ugyvitelCategory.categoryValue;
-            }
-          }
         } */
+
+        if(unasCustomer.group != null){
+          
+          ugyvitelCustomer.categories.category.add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.id));
+
+        }
 
         ugyvitelCustomers.customer.add(ugyvitelCustomer);
     }
