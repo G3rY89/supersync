@@ -270,7 +270,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCategory.name = ugyvitelCategory.name;
       unasCategory.display.menu = ugyvitelCategory.visible.equals("1") ? "yes" : "no";
       unasCategory.display.page = ugyvitelCategory.visible.equals("1") ? "yes" : "no";
-      unasCategory.parent.tree = "webes szar";
+      unasCategory.parent.tree = ugyvitelCategory.tree;
       unasCategory.order = ugyvitelCategory.categoryOrder;
 
       unasCategories.category.add(unasCategory);
@@ -517,6 +517,12 @@ public class UnasApiServiceImpl implements UnasApiService {
         ugyvitelCustomer.deliveryNumber = unasCustomer.addresses.shipping.streetNumber;
         ugyvitelCustomer.deliveryBuilding = "";
 
+        if(unasCustomer.group != null){
+          
+          ugyvitelCustomer.categories.category.add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.name));
+
+        }
+
        /*  if(ugyvitelCustomer.otherAddresses != null && ugyvitelCustomer.otherAddresses.otherAddress != null){
           for (OtherAddress ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) {
             Other unasOtherAddress = new Other();
@@ -533,11 +539,6 @@ public class UnasApiServiceImpl implements UnasApiService {
           }
         } */
 
-        if(unasCustomer.group != null){
-          
-          ugyvitelCustomer.categories.category.add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.name));
-
-        }
 
         ugyvitelCustomers.customer.add(ugyvitelCustomer);
     }

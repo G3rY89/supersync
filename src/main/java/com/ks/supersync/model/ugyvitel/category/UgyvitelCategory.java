@@ -24,4 +24,6 @@ public class UgyvitelCategory {
     public String id;
     @XmlElement(name = "ParentId")
     public String parentId;
+    @XmlElement(name = "Tree")
+    public String tree;
 }
