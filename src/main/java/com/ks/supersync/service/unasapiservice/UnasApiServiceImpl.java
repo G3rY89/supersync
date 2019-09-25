@@ -535,7 +535,7 @@ public class UnasApiServiceImpl implements UnasApiService {
 
         if(unasCustomer.group != null){
           
-          ugyvitelCustomer.categories.category.add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.id));
+          ugyvitelCustomer.categories.category.add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.name));
 
         }
 
