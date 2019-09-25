@@ -445,21 +445,17 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelProduct.productId = 0;
       ugyvitelProduct.webshopId = unasProduct.id;
       ugyvitelProduct.productCode = unasProduct.sku;
-      ugyvitelProduct.productName.add(new TranslatedName(webshopI18n.language, unasProduct.name));
+      ugyvitelProduct.productName.tName.add(new TranslatedName(webshopI18n.language, unasProduct.name));
       ugyvitelProduct.itemNumber = "";
       if(unasProduct.description != null){
-        /* for (TranslatedComment comment : ugyvitelProduct.comment) {
-          if(comment.languageId.equals(webshopI18n.language)){ */
-            ugyvitelProduct.comment.add(new TranslatedComment(webshopI18n.language, unasProduct.description.shortDesc));
-         /*  }
-        } */
+        ugyvitelProduct.comment.tComment.add(new TranslatedComment(webshopI18n.language, unasProduct.description.shortDesc));
       }
       ugyvitelProduct.barCode = "";
       ugyvitelProduct.lastPurchasePrice = "";
       ugyvitelProduct.active = unasProduct.state.equals("live") ? 1 : 0;
       ugyvitelProduct.vatCode = unasProduct.Prices != null ? unasProduct.Prices.vat : "";
       
-      ugyvitelProduct.quantityUnit.add(new TranslatedQuantityUnit(webshopI18n.language, unasProduct.unit));
+      ugyvitelProduct.quantityUnit.tQUnit.add(new TranslatedQuantityUnit(webshopI18n.language, unasProduct.unit));
       ugyvitelProduct.service = unasProduct.stocks != null && unasProduct.stocks.stock != null && unasProduct.stocks.status != null ? unasProduct.stocks.status.active : 0 ;
       if(unasProduct.Prices != null){
         for (Price price : unasProduct.Prices.prices) {
@@ -634,17 +630,17 @@ public class UnasApiServiceImpl implements UnasApiService {
       Price unitPrice = new Price();
 
       unasProduct.sku = ugyvitelProduct.productCode;
-      for (TranslatedName tName : ugyvitelProduct.productName) {
+      for (TranslatedName tName : ugyvitelProduct.productName.tName) {
         if(tName.languageId.equals(webshopI18n.language)){
           unasProduct.name = tName.name;
         }
       }
-      for (TranslatedQuantityUnit tQuantity : ugyvitelProduct.quantityUnit) {
+      for (TranslatedQuantityUnit tQuantity : ugyvitelProduct.quantityUnit.tQUnit) {
         if(tQuantity.languageId.equals(webshopI18n.language)){
           unasProduct.unit = tQuantity.quantityUnit;
         }
       }
-      for (TranslatedComment tComment : ugyvitelProduct.comment) {
+      for (TranslatedComment tComment : ugyvitelProduct.comment.tComment) {
           if(tComment.languageId.equals(webshopI18n.language)){
             unasProduct.description.shortDesc = tComment.comment;
           }
@@ -657,6 +653,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       Price unasSalePrice = new Price();
       unasSalePrice.type = "sale";
       unasSalePrice.net = ugyvitelProduct.discountPrice;
+      unasSalePrice.gross = "13654";
       unasProduct.Prices.prices.add(unasSalePrice);
       if(ugyvitelProduct.priceRules != null){          
         if(ugyvitelProduct.priceRules.priceRule != null){
@@ -669,13 +666,15 @@ public class UnasApiServiceImpl implements UnasApiService {
                   if(unasPrices.type.equals("sale")){
                     unasPrices.saleStart = pRule.validFrom;
                     unasPrices.saleEnd = pRule.validTo;
+                    unasPrices.net = ugyvitelProduct.discountPrice;
+                    unasPrices.gross = "315";
                   }
                 }
               } else {
                 Price unasPrice = new Price();
                 unasPrice.type =  "special"; //felülvizsgálni
                 unasPrice.net = pRule.price; //felülvizsgálni
-                //unasPrice.gross = "345"; //kötelező mező
+                unasPrice.gross = "345"; //kötelező mező
                 unasPrice.start = pRule.validFrom; //felülvizsgálni
                 unasPrice.end = pRule.validTo; //felülvizsgálni
                 unasProduct.Prices.prices.add(unasPrice);

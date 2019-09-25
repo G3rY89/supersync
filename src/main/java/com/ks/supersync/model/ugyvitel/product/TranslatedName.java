@@ -2,7 +2,6 @@ package com.ks.supersync.model.ugyvitel.product;
 
 import javax.xml.bind.annotation.*;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 public class TranslatedName {
     
     @XmlAttribute(name = "LanguageId")
@@ -13,5 +12,9 @@ public class TranslatedName {
     public TranslatedName(String languageId, String name){
         this.languageId = languageId;
         this.name = name;
+    }
+
+    public TranslatedName(){
+
     }
 }

@@ -14,4 +14,8 @@ public class TranslatedQuantityUnit {
         this.languageId = languageId;
         this.quantityUnit = quantityUnit;
     }
+
+    public TranslatedQuantityUnit(){
+        
+    }
 }

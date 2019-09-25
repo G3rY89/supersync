@@ -1,8 +1,5 @@
 package com.ks.supersync.model.ugyvitel.product;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.*;
 
 
@@ -15,11 +12,11 @@ public class UgyvitelProduct {
     @XmlElement(name = "ProductCode")
     public String productCode;
     @XmlElement(name = "Name")
-    public List<TranslatedName> productName;
+    public Name productName;
     @XmlElement(name = "ItemNumber")
     public String itemNumber;
     @XmlElement(name = "Comment")
-    public List<TranslatedComment> comment;
+    public Comment comment;
     @XmlElement(name = "Barcode")
     public String barCode;
     @XmlElement(name = "LastPurchasePrice")
@@ -29,7 +26,7 @@ public class UgyvitelProduct {
     @XmlElement(name = "VatCode")
     public String vatCode;
     @XmlElement(name = "QuantityUnit")
-    public List<TranslatedQuantityUnit> quantityUnit;
+    public QuantityUnit quantityUnit;
     @XmlElement(name = "Service")
     public Integer service;
     @XmlElement(name = "UnitPrice")
@@ -46,9 +43,9 @@ public class UgyvitelProduct {
     public Categories categories;
 
     public UgyvitelProduct(){
-        this.productName = new ArrayList<>();
-        this.comment = new ArrayList<>();
-        this.quantityUnit = new ArrayList<>();
+        this.productName = new Name();
+        this.comment = new Comment();
+        this.quantityUnit = new QuantityUnit();
         this.priceRules = new PriceRules();
         this.stocks = new Stocks();
         this.categories = new Categories();

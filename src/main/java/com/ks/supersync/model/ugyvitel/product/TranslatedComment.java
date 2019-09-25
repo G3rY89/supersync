@@ -14,4 +14,8 @@ public class TranslatedComment {
         this.languageId = languageId;
         this.comment = comment;
     }
+
+    public TranslatedComment(){
+        
+    }
 }
