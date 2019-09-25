@@ -13,8 +13,6 @@ import javax.xml.bind.Unmarshaller;
 
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategories;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategory;
-import com.ks.supersync.model.ugyvitel.customer.OtherAddress;
-import com.ks.supersync.model.ugyvitel.customer.OtherAddresses;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomer;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomers;
 import com.ks.supersync.model.ugyvitel.order.UgyvitelOrder;
@@ -29,7 +27,6 @@ import com.ks.supersync.model.unas.category.UnasCategories;
 import com.ks.supersync.model.unas.category.UnasCategory;
 import com.ks.supersync.model.unas.customer.UnasCustomer;
 import com.ks.supersync.model.unas.customer.UnasCustomers;
-import com.ks.supersync.model.unas.customer.addresses.Other;
 import com.ks.supersync.model.unas.order.Comment;
 import com.ks.supersync.model.unas.order.Item;
 import com.ks.supersync.model.unas.order.UnasOrder;
@@ -281,7 +278,8 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasCategory.name = ugyvitelCategory.name;
       unasCategory.display.menu = ugyvitelCategory.visible.equals("1")  ? "yes" : "no";
       unasCategory.display.page = ugyvitelCategory.visible.equals("1")  ? "yes" : "no";
-      unasCategory.parent.id = ugyvitelCategory.parentId;
+      //unasCategory.parent.id = ugyvitelCategory.parentId;
+      unasCategory.parent.tree = "webes szar";
       unasCategory.order = ugyvitelCategory.categoryOrder;
 
       unasCategories.category.add(unasCategory);
