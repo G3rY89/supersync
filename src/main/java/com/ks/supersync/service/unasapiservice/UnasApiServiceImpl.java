@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import com.ks.supersync.model.response.CustomerErrorResponse;
+import com.ks.supersync.model.response.ResponseModel;
 import com.ks.supersync.model.supersync.I18n;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategories;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategory;
@@ -56,30 +58,32 @@ public class UnasApiServiceImpl implements UnasApiService {
   @Value("${unasapi.serviceurl}")
   private String unasapiServiceUrl;
 
-  private I18nRepository i18nRepository;
+  private final I18nRepository i18nRepository;
 
-  public UnasApiServiceImpl(I18nRepository i18nRepository) {
+  private CustomerErrorResponse customerErrorResponse;
+
+  public UnasApiServiceImpl(final I18nRepository i18nRepository) {
     this.i18nRepository = i18nRepository;
   }
 
   @Override
-  public UgyvitelProducts getUnasProductsToUgyvitel(String apiKey) throws IOException, JAXBException {
+  public UgyvitelProducts getUnasProductsToUgyvitel(final String apiKey) throws IOException, JAXBException {
 
     UgyvitelProducts uProducts = new UgyvitelProducts();
 
     client.newBuilder().connectTimeout(15, TimeUnit.SECONDS).writeTimeout(15, TimeUnit.SECONDS).readTimeout(15,
         TimeUnit.SECONDS);
 
-    Request request = new Request.Builder()
+    final Request request = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString() + "?debug=true").get()
         .addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(request).execute();
+    final Response response = client.newCall(request).execute();
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(response.body().string());
+    final JAXBContext jaxbContext = JAXBContext.newInstance(UnasProducts.class);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(response.body().string());
 
-    UnasProducts unasProducts = (UnasProducts) jaxbUnmarshaller.unmarshal(reader);
+    final UnasProducts unasProducts = (UnasProducts) jaxbUnmarshaller.unmarshal(reader);
 
     uProducts = mapUnasProductsToUgyvitelProducts(unasProducts, apiKey);
 
@@ -87,19 +91,20 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public UgyvitelCustomers getCustomersToUgyvitel(String apiKey) throws IOException, JAXBException {
+  public UgyvitelCustomers getCustomersToUgyvitel(final String apiKey) throws IOException, JAXBException {
 
     UgyvitelCustomers uCustomers = new UgyvitelCustomers();
 
-    Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_CUSTOMERS.toString())
-        .get().addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(request).execute();
+    final Request request = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_CUSTOMERS.toString()).get().addHeader("ApiKey", apiKey)
+        .build();
+    final Response response = client.newCall(request).execute();
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(response.body().string());
+    final JAXBContext jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(response.body().string());
 
-    UnasCustomers unasCustomers = (UnasCustomers) jaxbUnmarshaller.unmarshal(reader);
+    final UnasCustomers unasCustomers = (UnasCustomers) jaxbUnmarshaller.unmarshal(reader);
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
 
@@ -107,19 +112,19 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public UgyvitelOrders getOrdersToUgyvitel(String apiKey) throws IOException, JAXBException {
+  public UgyvitelOrders getOrdersToUgyvitel(final String apiKey) throws IOException, JAXBException {
 
     UgyvitelOrders uOrders = new UgyvitelOrders();
 
-    Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_ORDERS.toString()).get()
-        .addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(request).execute();
+    final Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_ORDERS.toString())
+        .get().addHeader("ApiKey", apiKey).build();
+    final Response response = client.newCall(request).execute();
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UnasOrders.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(response.body().string());
+    final JAXBContext jaxbContext = JAXBContext.newInstance(UnasOrders.class);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(response.body().string());
 
-    UnasOrders unasOrders = (UnasOrders) jaxbUnmarshaller.unmarshal(reader);
+    final UnasOrders unasOrders = (UnasOrders) jaxbUnmarshaller.unmarshal(reader);
 
     uOrders = mapUnasOrdersToUgyvitelOrders(unasOrders);
 
@@ -127,144 +132,155 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public Object sendUgyvitelProductToUnas(String apiKey, String Products) throws IOException, JAXBException {
+  public Object sendUgyvitelProductToUnas(final String apiKey, final String Products)
+      throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelProducts.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Products);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(Products);
 
-    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey), sw);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    Request setProductRequest = new Request.Builder()
+    final Request setProductRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_PRODUCTS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setProductRequest).execute();
+    final Response response = client.newCall(setProductRequest).execute();
 
     return response.body().string();
   }
 
   @Override
-  public Object sendUgyvitelCustomerToUnas(String apiKey, String Customers) throws IOException, JAXBException {
+  public Object sendUgyvitelCustomerToUnas(final String apiKey, final String Customers)
+      throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCustomers.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Customers);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(Customers);
 
-    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(ugyvitelCustomers), sw);
+    
+    jaxbContext = JAXBContext.newInstance(CustomerErrorResponse.class);
+    jaxbMarshaller = jaxbContext.createMarshaller();
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    sw = new StringWriter();
+    jaxbMarshaller.marshal(customerErrorResponse, sw);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    Request setCustomerRequest = new Request.Builder()
+    final Request setCustomerRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setCustomerRequest).execute();
+    final Response response = client.newCall(setCustomerRequest).execute();
 
-    return response.body().string();
+    return response.body().string() + sw.toString();
   }
 
   @Override
-  public Object sendUgyvitelOrderToUnas(String apiKey, String Orders) throws IOException, JAXBException {
+  public Object sendUgyvitelOrderToUnas(final String apiKey, final String Orders) throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelOrders.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Orders);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(Orders);
 
-    UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) jaxbUnmarshaller.unmarshal(reader);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelOrdersToUnasOrders(ugyvitelOrders), sw);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    Request setOrderRequest = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.SET_ORDERS.toString())
-        .post(body).addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(setOrderRequest).execute();
+    final Request setOrderRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_ORDERS.toString()).post(body).addHeader("ApiKey", apiKey)
+        .build();
+    final Response response = client.newCall(setOrderRequest).execute();
 
     return response.body().string();
   }
 
   @Override
-  public Object sendUgyvitelStockToUnas(String apiKey, String Products) throws IOException, JAXBException {
+  public Object sendUgyvitelStockToUnas(final String apiKey, final String Products) throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelProducts.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Products);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(Products);
 
-    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelStocksToUnasStocks(ugyvitelProducts), sw);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    Request setStockRequest = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.SET_STOCKS.toString())
-        .post(body).addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(setStockRequest).execute();
+    final Request setStockRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_STOCKS.toString()).post(body).addHeader("ApiKey", apiKey)
+        .build();
+    final Response response = client.newCall(setStockRequest).execute();
 
     return response.body().string();
   }
 
   @Override
-  public Object sendUgyvitelProductCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException {
+  public Object sendUgyvitelProductCategoryToUnas(final String apiKey, final String Categories)
+      throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCategories.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Categories);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(Categories);
 
-    UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) jaxbUnmarshaller.unmarshal(reader);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCategories.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories), sw);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    Request setCategoryRequest = new Request.Builder()
+    final Request setCategoryRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CATEGORIES.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setCategoryRequest).execute();
+    final Response response = client.newCall(setCategoryRequest).execute();
 
     return response.body().string();
   }
 
-  private Object mapUgyvitelCategoriesToUnasCategories(UgyvitelCategories ugyvitelCategories) {
+  private Object mapUgyvitelCategoriesToUnasCategories(final UgyvitelCategories ugyvitelCategories) {
 
-    UnasCategories unasCategories = new UnasCategories();
+    final UnasCategories unasCategories = new UnasCategories();
 
-    for (UgyvitelCategory ugyvitelCategory : ugyvitelCategories.categories) {
-      UnasCategory unasCategory = new UnasCategory();
+    for (final UgyvitelCategory ugyvitelCategory : ugyvitelCategories.categories) {
+      final UnasCategory unasCategory = new UnasCategory();
 
       unasCategory.id = ugyvitelCategory.id;
       unasCategory.name = ugyvitelCategory.name;
@@ -279,19 +295,19 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasCategories;
   }
 
-  private Object mapUgyvitelStocksToUnasStocks(UgyvitelProducts ugyvitelProducts) {
+  private Object mapUgyvitelStocksToUnasStocks(final UgyvitelProducts ugyvitelProducts) {
 
-    UnasProducts unasProducts = new UnasProducts();
+    final UnasProducts unasProducts = new UnasProducts();
 
     unasProducts.products = new ArrayList<>();
 
-    for (UgyvitelProduct ugyvitelProduct : ugyvitelProducts.product) {
-      UnasProduct unasProduct = new UnasProduct();
+    for (final UgyvitelProduct ugyvitelProduct : ugyvitelProducts.product) {
+      final UnasProduct unasProduct = new UnasProduct();
 
-      com.ks.supersync.model.unas.product.stock.Stock stock = new com.ks.supersync.model.unas.product.stock.Stock();
+      final com.ks.supersync.model.unas.product.stock.Stock stock = new com.ks.supersync.model.unas.product.stock.Stock();
       stock.price = ugyvitelProduct.lastPurchasePrice;
 
-      for (Stock ugyvitelstock : ugyvitelProduct.stocks.stock) {
+      for (final Stock ugyvitelstock : ugyvitelProduct.stocks.stock) {
         stock.qty += ugyvitelstock.freeStock;
       }
       unasProduct.stocks.stock.add(stock);
@@ -300,14 +316,14 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasProducts;
   }
 
-  private Object mapUgyvitelOrdersToUnasOrders(UgyvitelOrders ugyvitelOrders) {
+  private Object mapUgyvitelOrdersToUnasOrders(final UgyvitelOrders ugyvitelOrders) {
 
-    UnasOrders unasOrders = new UnasOrders();
+    final UnasOrders unasOrders = new UnasOrders();
 
     unasOrders.orders = new ArrayList<>();
 
-    for (UgyvitelOrder ugyvitelOrder : ugyvitelOrders.order) {
-      UnasOrder unasOrder = new UnasOrder();
+    for (final UgyvitelOrder ugyvitelOrder : ugyvitelOrders.order) {
+      final UnasOrder unasOrder = new UnasOrder();
 
       unasOrder.key = ugyvitelOrder.externalId;
       unasOrder.date = ugyvitelOrder.orderedDate;
@@ -356,19 +372,19 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasOrder.payment.name = ugyvitelOrder.paymentmethod;
 
       if (ugyvitelOrder.bottomComment != null) {
-        Comment comment = new Comment();
+        final Comment comment = new Comment();
         comment.text = ugyvitelOrder.bottomComment;
         unasOrder.comments.comments.add(comment);
       }
 
       if (ugyvitelOrder.topComment != null) {
-        Comment comment = new Comment();
+        final Comment comment = new Comment();
         comment.text = ugyvitelOrder.topComment;
         unasOrder.comments.comments.add(comment);
       }
 
-      for (Detail detail : ugyvitelOrder.details.detail) {
-        Item item = new Item();
+      for (final Detail detail : ugyvitelOrder.details.detail) {
+        final Item item = new Item();
         item.sku = detail.productCode;
         item.name = detail.productName;
         item.unit = detail.quantityUnit;
@@ -384,85 +400,89 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasOrders;
   }
 
-  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(UgyvitelCustomers ugyvitelCustomers) {
-    UnasCustomers unasCustomers = new UnasCustomers();
+  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(final UgyvitelCustomers ugyvitelCustomers) {
+    final UnasCustomers unasCustomers = new UnasCustomers();
 
     unasCustomers.customer = new ArrayList<>();
 
-    for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
+    for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
 
-      UnasCustomer unasCustomer = new UnasCustomer();
-
-      unasCustomer.id = ugyvitelCustomer.customerId;
-      unasCustomer.email = ugyvitelCustomer.email;
-      unasCustomer.contact.name = ugyvitelCustomer.customerName;
-      unasCustomer.contact.phone = ugyvitelCustomer.phone;
-      unasCustomer.contact.mobile = ugyvitelCustomer.phone != null ? ugyvitelCustomer.phone : "";
-      unasCustomer.contact.lang = ugyvitelCustomer.countryCode;
-      unasCustomer.addresses.invoice.ZIP = ugyvitelCustomer.centralZip;
-      unasCustomer.addresses.invoice.city = ugyvitelCustomer.centralCity;
-      unasCustomer.addresses.invoice.country = ugyvitelCustomer.centralCountry;
-      unasCustomer.addresses.invoice.countryCode = ugyvitelCustomer.countryCode.toLowerCase();
-      unasCustomer.addresses.invoice.name = ugyvitelCustomer.centralAddressName != null
-          ? ugyvitelCustomer.centralAddressName
-          : ugyvitelCustomer.customerName;
-      if (ugyvitelCustomer.centralPublicDomain == null) {
-        unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
-      } else {
-        unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
-        unasCustomer.addresses.invoice.streetType = ugyvitelCustomer.centralPublicDomain;
-        unasCustomer.addresses.invoice.streetNumber = ugyvitelCustomer.centralNumber;
-      }
-      unasCustomer.addresses.shipping.ZIP = ugyvitelCustomer.deliveryZip;
-      unasCustomer.addresses.shipping.city = ugyvitelCustomer.deliveryCity;
-      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountry;
-      unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountryCode != null
-          ? ugyvitelCustomer.deliveryCountryCode.toLowerCase()
-          : "";
-      unasCustomer.addresses.shipping.name = ugyvitelCustomer.deliveryAddressName != null
-          ? ugyvitelCustomer.deliveryAddressName
-          : ugyvitelCustomer.customerName;
-      if (ugyvitelCustomer.deliveryPublicDomain == null) {
-        unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
-      } else {
-        unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
-        unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
-        unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
-      }
-      unasCustomers.customer.add(unasCustomer);
+      if(isValidUnasCustomer(ugyvitelCustomer)){
+        final UnasCustomer unasCustomer = new UnasCustomer();
+  
+        unasCustomer.id = ugyvitelCustomer.customerId;
+        unasCustomer.email = ugyvitelCustomer.email;
+        unasCustomer.contact.name = ugyvitelCustomer.customerName;
+        unasCustomer.contact.phone = ugyvitelCustomer.phone;
+        unasCustomer.contact.mobile = ugyvitelCustomer.phone != null ? ugyvitelCustomer.phone : "";
+        unasCustomer.contact.lang = ugyvitelCustomer.countryCode;
+        unasCustomer.addresses.invoice.ZIP = ugyvitelCustomer.centralZip;
+        unasCustomer.addresses.invoice.city = ugyvitelCustomer.centralCity;
+        unasCustomer.addresses.invoice.country = ugyvitelCustomer.centralCountry;
+        unasCustomer.addresses.invoice.countryCode = ugyvitelCustomer.countryCode.toLowerCase();
+        unasCustomer.addresses.invoice.name = ugyvitelCustomer.centralAddressName != null
+            ? ugyvitelCustomer.centralAddressName
+            : ugyvitelCustomer.customerName;
+        if (ugyvitelCustomer.centralPublicDomain == null) {
+          unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
+        } else {
+          unasCustomer.addresses.invoice.streetName = ugyvitelCustomer.centralStreet;
+          unasCustomer.addresses.invoice.streetType = ugyvitelCustomer.centralPublicDomain;
+          unasCustomer.addresses.invoice.streetNumber = ugyvitelCustomer.centralNumber;
+        }
+        unasCustomer.addresses.shipping.ZIP = ugyvitelCustomer.deliveryZip;
+        unasCustomer.addresses.shipping.city = ugyvitelCustomer.deliveryCity;
+        unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountry;
+        unasCustomer.addresses.shipping.country = ugyvitelCustomer.deliveryCountryCode != null
+            ? ugyvitelCustomer.deliveryCountryCode.toLowerCase()
+            : "";
+        unasCustomer.addresses.shipping.name = ugyvitelCustomer.deliveryAddressName != null
+            ? ugyvitelCustomer.deliveryAddressName
+            : ugyvitelCustomer.customerName;
+        if (ugyvitelCustomer.deliveryPublicDomain == null) {
+          unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
+        } else {
+          unasCustomer.addresses.shipping.streetName = ugyvitelCustomer.deliveryStreet;
+          unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
+          unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
+        }
+        unasCustomers.customer.add(unasCustomer);
+      }      
     }
     return unasCustomers;
   }
 
-  private UgyvitelProducts mapUnasProductsToUgyvitelProducts(UnasProducts unasProducts, String apiKey) {
-    I18n webshopI18n = i18nRepository.findByWebshopApiKey(apiKey);
+  private UgyvitelProducts mapUnasProductsToUgyvitelProducts(final UnasProducts unasProducts, final String apiKey) {
+    final I18n webshopI18n = i18nRepository.findByWebshopApiKey(apiKey);
 
-    UgyvitelProducts ugyvitelProducts = new UgyvitelProducts();
+    final UgyvitelProducts ugyvitelProducts = new UgyvitelProducts();
     ugyvitelProducts.product = new ArrayList<>();
 
-    for (UnasProduct unasProduct : unasProducts.products) {
-      UgyvitelProduct ugyvitelProduct = new UgyvitelProduct();
+    for (final UnasProduct unasProduct : unasProducts.products) {
+      final UgyvitelProduct ugyvitelProduct = new UgyvitelProduct();
       ugyvitelProduct.productId = 0;
       ugyvitelProduct.webshopId = unasProduct.id;
       ugyvitelProduct.productCode = unasProduct.sku;
       ugyvitelProduct.productName.tName.add(new TranslatedName(webshopI18n.language, unasProduct.name));
       ugyvitelProduct.itemNumber = "";
-      if(unasProduct.description != null){
-        ugyvitelProduct.comment.tComment.add(new TranslatedComment(webshopI18n.language, unasProduct.description.shortDesc));
+      if (unasProduct.description != null) {
+        ugyvitelProduct.comment.tComment
+            .add(new TranslatedComment(webshopI18n.language, unasProduct.description.shortDesc));
       }
       ugyvitelProduct.barCode = "";
       ugyvitelProduct.lastPurchasePrice = "";
       ugyvitelProduct.active = unasProduct.state.equals("live") ? 1 : 0;
       ugyvitelProduct.vatCode = unasProduct.Prices != null ? unasProduct.Prices.vat : "";
-      
+
       ugyvitelProduct.quantityUnit.tQUnit.add(new TranslatedQuantityUnit(webshopI18n.language, unasProduct.unit));
-      ugyvitelProduct.service = unasProduct.stocks != null && unasProduct.stocks.stock != null && unasProduct.stocks.status != null ? unasProduct.stocks.status.active : 0 ;
-      if(unasProduct.Prices != null){
-        for (Price price : unasProduct.Prices.prices) {
-          if(price.type.equals("normal")){
+      ugyvitelProduct.service = unasProduct.stocks != null && unasProduct.stocks.stock != null
+          && unasProduct.stocks.status != null ? unasProduct.stocks.status.active : 0;
+      if (unasProduct.Prices != null) {
+        for (final Price price : unasProduct.Prices.prices) {
+          if (price.type.equals("normal")) {
             ugyvitelProduct.unitPrice = price.net != null ? price.net : "";
           } else {
-            PriceRule priceRule =  new PriceRule();
+            final PriceRule priceRule = new PriceRule();
             priceRule.priceRuleId = "";
             priceRule.validFrom = price.saleStart;
             priceRule.validTo = price.saleEnd;
@@ -472,8 +492,7 @@ public class UnasApiServiceImpl implements UnasApiService {
             ugyvitelProduct.priceRules.priceRule.add(priceRule);
           }
         }
-      } 
-      else {
+      } else {
         ugyvitelProduct.unitPrice = "";
       }
       ugyvitelProducts.product.add(ugyvitelProduct);
@@ -481,77 +500,78 @@ public class UnasApiServiceImpl implements UnasApiService {
     return ugyvitelProducts;
   }
 
-  private UgyvitelCustomers mapUnasCustomersToUgyvitelCustomers(UnasCustomers unasCustomers){
+  private UgyvitelCustomers mapUnasCustomersToUgyvitelCustomers(final UnasCustomers unasCustomers) {
 
-    UgyvitelCustomers ugyvitelCustomers = new UgyvitelCustomers();
+    final UgyvitelCustomers ugyvitelCustomers = new UgyvitelCustomers();
     ugyvitelCustomers.customer = new ArrayList<>();
 
-    for(UnasCustomer unasCustomer : unasCustomers.customer){
-        UgyvitelCustomer ugyvitelCustomer = new UgyvitelCustomer();
-        ugyvitelCustomer.webshopId = unasCustomer.id;
-        ugyvitelCustomer.customerCode = unasCustomer.id;
-        ugyvitelCustomer.customerName = unasCustomer.contact.name;
-        ugyvitelCustomer.email = unasCustomer.email;
-        ugyvitelCustomer.phone = unasCustomer.contact != null ? unasCustomer.contact.phone : "";
-        ugyvitelCustomer.contactName = unasCustomer.contact.name;
-        ugyvitelCustomer.centralAddressName = unasCustomer.addresses.invoice.name;
-        ugyvitelCustomer.centralCountry = unasCustomer.addresses.invoice.country;
-        ugyvitelCustomer.centralZip = unasCustomer.addresses.invoice.ZIP;
-        ugyvitelCustomer.centralCity = unasCustomer.addresses.invoice.city;
-        ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.street;
-        ugyvitelCustomer.centralPublicDomain = unasCustomer.addresses.invoice.streetType;
-        ugyvitelCustomer.centralStaircase = "";
-        ugyvitelCustomer.centralDoor = "";
-        ugyvitelCustomer.centralFloor = "";
-        ugyvitelCustomer.centralNumber =  unasCustomer.addresses.invoice.streetNumber;
-        ugyvitelCustomer.centralBuilding = "";
-        ugyvitelCustomer.deliveryAddressName = unasCustomer.addresses.shipping.name;
-        ugyvitelCustomer.deliveryCountry = unasCustomer.addresses.shipping.country;
-        ugyvitelCustomer.deliveryCity = unasCustomer.addresses.shipping.city;
-        ugyvitelCustomer.deliveryStreet = unasCustomer.addresses.shipping.street;
-        ugyvitelCustomer.deliveryZip = unasCustomer.addresses.shipping.ZIP;
-        ugyvitelCustomer.deliveryPublicDomain = unasCustomer.addresses.shipping.streetType;
-        ugyvitelCustomer.deliveryStaircase = "";
-        ugyvitelCustomer.deliveryDoor = "";
-        ugyvitelCustomer.deliveryFloor= "";
-        ugyvitelCustomer.deliveryNumber = unasCustomer.addresses.shipping.streetNumber;
-        ugyvitelCustomer.deliveryBuilding = "";
+    for (final UnasCustomer unasCustomer : unasCustomers.customer) {
+      final UgyvitelCustomer ugyvitelCustomer = new UgyvitelCustomer();
+      ugyvitelCustomer.webshopId = unasCustomer.id;
+      ugyvitelCustomer.customerCode = unasCustomer.id;
+      ugyvitelCustomer.customerName = unasCustomer.contact.name;
+      ugyvitelCustomer.email = unasCustomer.email;
+      ugyvitelCustomer.phone = unasCustomer.contact != null ? unasCustomer.contact.phone : "";
+      ugyvitelCustomer.contactName = unasCustomer.contact.name;
+      ugyvitelCustomer.centralAddressName = unasCustomer.addresses.invoice.name;
+      ugyvitelCustomer.centralCountry = unasCustomer.addresses.invoice.country;
+      ugyvitelCustomer.centralZip = unasCustomer.addresses.invoice.ZIP;
+      ugyvitelCustomer.centralCity = unasCustomer.addresses.invoice.city;
+      ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.street;
+      ugyvitelCustomer.centralPublicDomain = unasCustomer.addresses.invoice.streetType;
+      ugyvitelCustomer.centralStaircase = "";
+      ugyvitelCustomer.centralDoor = "";
+      ugyvitelCustomer.centralFloor = "";
+      ugyvitelCustomer.centralNumber = unasCustomer.addresses.invoice.streetNumber;
+      ugyvitelCustomer.centralBuilding = "";
+      ugyvitelCustomer.deliveryAddressName = unasCustomer.addresses.shipping.name;
+      ugyvitelCustomer.deliveryCountry = unasCustomer.addresses.shipping.country;
+      ugyvitelCustomer.deliveryCity = unasCustomer.addresses.shipping.city;
+      ugyvitelCustomer.deliveryStreet = unasCustomer.addresses.shipping.street;
+      ugyvitelCustomer.deliveryZip = unasCustomer.addresses.shipping.ZIP;
+      ugyvitelCustomer.deliveryPublicDomain = unasCustomer.addresses.shipping.streetType;
+      ugyvitelCustomer.deliveryStaircase = "";
+      ugyvitelCustomer.deliveryDoor = "";
+      ugyvitelCustomer.deliveryFloor = "";
+      ugyvitelCustomer.deliveryNumber = unasCustomer.addresses.shipping.streetNumber;
+      ugyvitelCustomer.deliveryBuilding = "";
 
-        if(unasCustomer.group != null){
-          
-          ugyvitelCustomer.categories.category.add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.name));
+      if (unasCustomer.group != null) {
 
-        }
+        ugyvitelCustomer.categories.category
+            .add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.name));
 
-       /*  if(ugyvitelCustomer.otherAddresses != null && ugyvitelCustomer.otherAddresses.otherAddress != null){
-          for (OtherAddress ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) {
-            Other unasOtherAddress = new Other();
-  
-            unasOtherAddress.ZIP = ugyvitelOtherAddress.otherZip;
-            unasOtherAddress.city = ugyvitelOtherAddress.otherCity;
-            unasOtherAddress.country = ugyvitelOtherAddress.otherCountry;
-            unasOtherAddress.name = ugyvitelOtherAddress.otherAddressName;
-            unasOtherAddress.streetName = ugyvitelOtherAddress.otherStreet;
-            unasOtherAddress.streetType = ugyvitelOtherAddress.otherPublicDomain;
-            unasOtherAddress.streetNumber = ugyvitelOtherAddress.otherNumber;
-  
-            unasCustomer.addresses.others.add(unasOtherAddress);
-          }
-        } */
+      }
 
+      /*
+       * if(ugyvitelCustomer.otherAddresses != null &&
+       * ugyvitelCustomer.otherAddresses.otherAddress != null){ for (OtherAddress
+       * ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) { Other
+       * unasOtherAddress = new Other();
+       * 
+       * unasOtherAddress.ZIP = ugyvitelOtherAddress.otherZip; unasOtherAddress.city =
+       * ugyvitelOtherAddress.otherCity; unasOtherAddress.country =
+       * ugyvitelOtherAddress.otherCountry; unasOtherAddress.name =
+       * ugyvitelOtherAddress.otherAddressName; unasOtherAddress.streetName =
+       * ugyvitelOtherAddress.otherStreet; unasOtherAddress.streetType =
+       * ugyvitelOtherAddress.otherPublicDomain; unasOtherAddress.streetNumber =
+       * ugyvitelOtherAddress.otherNumber;
+       * 
+       * unasCustomer.addresses.others.add(unasOtherAddress); } }
+       */
 
-        ugyvitelCustomers.customer.add(ugyvitelCustomer);
+      ugyvitelCustomers.customer.add(ugyvitelCustomer);
     }
 
     return ugyvitelCustomers;
   }
 
-  private UgyvitelOrders mapUnasOrdersToUgyvitelOrders(UnasOrders unasOrders){
+  private UgyvitelOrders mapUnasOrdersToUgyvitelOrders(final UnasOrders unasOrders) {
 
-    UgyvitelOrders ugyvitelOrders = new UgyvitelOrders();
+    final UgyvitelOrders ugyvitelOrders = new UgyvitelOrders();
     ugyvitelOrders.order = new ArrayList<>();
-    for (UnasOrder unasOrder : unasOrders.orders) {
-      UgyvitelOrder ugyvitelOrder = new UgyvitelOrder();
+    for (final UnasOrder unasOrder : unasOrders.orders) {
+      final UgyvitelOrder ugyvitelOrder = new UgyvitelOrder();
       ugyvitelOrder.webshopId = unasOrder.key;
       ugyvitelOrder.currency = unasOrder.currency;
       ugyvitelOrder.customerWebshopId = "";
@@ -560,28 +580,56 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelOrder.Email = unasOrder.customer != null ? unasOrder.customer.email : "";
       ugyvitelOrder.customerName = "";
       ugyvitelOrder.customerContact = unasOrder.customer != null ? unasOrder.customer.contact.name : "";
-      ugyvitelOrder.invoicingZip = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.ZIP : "";
-      ugyvitelOrder.invoicingCity = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.city : "";
-      ugyvitelOrder.invoicingStreet = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.street : "";
+      ugyvitelOrder.invoicingZip = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.ZIP : "";
+      ugyvitelOrder.invoicingCity = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.city : "";
+      ugyvitelOrder.invoicingStreet = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.street : "";
       ugyvitelOrder.invoicingStaircase = "";
       ugyvitelOrder.invoicingDoor = "";
       ugyvitelOrder.invoicingFloor = "";
       ugyvitelOrder.invoicingBuilding = "";
-      ugyvitelOrder.invoicingNumber = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.streetNumber : "";
-      ugyvitelOrder.invoicingPublicDomain = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.streetType : "";
-      ugyvitelOrder.invoicingCountry = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.country : "";
-      ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.name : "";
-      ugyvitelOrder.deliveryZip = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.ZIP : "";
-      ugyvitelOrder.deliveryCity = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.city : "";
-      ugyvitelOrder.deliveryStreet = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.street : "";
+      ugyvitelOrder.invoicingNumber = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.streetNumber : "";
+      ugyvitelOrder.invoicingPublicDomain = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.streetType : "";
+      ugyvitelOrder.invoicingCountry = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.invoice != null ? unasOrder.customer.addresses.invoice.country : "";
+      ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null
+          && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.name : "";
+      ugyvitelOrder.deliveryZip = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.shipping.ZIP
+              : "";
+      ugyvitelOrder.deliveryCity = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.shipping.city
+              : "";
+      ugyvitelOrder.deliveryStreet = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.shipping.street
+              : "";
       ugyvitelOrder.deliveryStaircase = "";
       ugyvitelOrder.deliveryDoor = "";
       ugyvitelOrder.deliveryFloor = "";
       ugyvitelOrder.deliveryBuilding = "";
-      ugyvitelOrder.deliveryNumber = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.streetNumber : "";
-      ugyvitelOrder.deliveryPublicDomain = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.streetType : "";
-      ugyvitelOrder.deliveryCountry = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.shipping.country : "";
-      ugyvitelOrder.taxNumber = ugyvitelOrder.deliveryName = unasOrder.customer != null && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null ? unasOrder.customer.addresses.invoice.taxNumber : "";
+      ugyvitelOrder.deliveryNumber = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.shipping.streetNumber
+              : "";
+      ugyvitelOrder.deliveryPublicDomain = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.shipping.streetType
+              : "";
+      ugyvitelOrder.deliveryCountry = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.shipping.country
+              : "";
+      ugyvitelOrder.taxNumber = ugyvitelOrder.deliveryName = unasOrder.customer != null
+          && unasOrder.customer.addresses != null && unasOrder.customer.addresses.shipping != null
+              ? unasOrder.customer.addresses.invoice.taxNumber
+              : "";
       ugyvitelOrder.sequencePrefix = "";
       ugyvitelOrder.paymentDelayDays = "";
       ugyvitelOrder.paymentmethod = unasOrder.payment != null ? unasOrder.payment.name : "";
@@ -590,11 +638,11 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelOrder.transportMode = unasOrder.shipping != null ? unasOrder.shipping.name : "";
       ugyvitelOrder.topComment = "";
       ugyvitelOrder.bottomComment = "";
-      if(unasOrder.items.item != null){
+      if (unasOrder.items.item != null) {
         ugyvitelOrder.details = new Details();
         ugyvitelOrder.details.detail = new ArrayList<>();
-        for (Item item : unasOrder.items.item) {
-          Detail detail = new Detail();
+        for (final Item item : unasOrder.items.item) {
+          final Detail detail = new Detail();
           detail.webshopId = "";
           detail.productCode = item.sku;
           detail.productName = item.name;
@@ -602,7 +650,7 @@ public class UnasApiServiceImpl implements UnasApiService {
           detail.quantityUnit = item.unit;
           detail.unitPrice = item.priceNet;
           detail.stock = "";
-          detail.productComment = ""; //ellenőrizni
+          detail.productComment = ""; // ellenőrizni
           detail.vatCode = item.vat;
           ugyvitelOrder.details.detail.add(detail);
         }
@@ -613,55 +661,55 @@ public class UnasApiServiceImpl implements UnasApiService {
     return ugyvitelOrders;
   }
 
-  private UnasProducts mapUgyvitelProductsToUnasProducts(UgyvitelProducts ugyvitelProducts, String apiKey){
-    I18n webshopI18n = i18nRepository.findByWebshopApiKey(apiKey);
+  private UnasProducts mapUgyvitelProductsToUnasProducts(final UgyvitelProducts ugyvitelProducts, final String apiKey) {
+    final I18n webshopI18n = i18nRepository.findByWebshopApiKey(apiKey);
 
-    UnasProducts unasProducts = new UnasProducts();
+    final UnasProducts unasProducts = new UnasProducts();
 
     unasProducts.products = new ArrayList<>();
 
-    for (UgyvitelProduct ugyvitelProduct : ugyvitelProducts.product) {
-      UnasProduct unasProduct = new UnasProduct();
+    for (final UgyvitelProduct ugyvitelProduct : ugyvitelProducts.product) {
+      final UnasProduct unasProduct = new UnasProduct();
       unasProduct.Prices = new Prices();
       unasProduct.Prices.prices = new ArrayList<>();
       unasProduct.description = new Description();
-      Price unitPrice = new Price();
+      final Price unitPrice = new Price();
 
       unasProduct.sku = ugyvitelProduct.productCode;
-      for (TranslatedName tName : ugyvitelProduct.productName.tName) {
-        if(tName.languageId.equals(webshopI18n.language)){
+      for (final TranslatedName tName : ugyvitelProduct.productName.tName) {
+        if (tName.languageId.equals(webshopI18n.language)) {
           unasProduct.name = tName.name;
         }
       }
-      for (TranslatedQuantityUnit tQuantity : ugyvitelProduct.quantityUnit.tQUnit) {
-        if(tQuantity.languageId.equals(webshopI18n.language)){
+      for (final TranslatedQuantityUnit tQuantity : ugyvitelProduct.quantityUnit.tQUnit) {
+        if (tQuantity.languageId.equals(webshopI18n.language)) {
           unasProduct.unit = tQuantity.quantityUnit;
         }
       }
-      for (TranslatedComment tComment : ugyvitelProduct.comment.tComment) {
-          if(tComment.languageId.equals(webshopI18n.language)){
-            unasProduct.description.shortDesc = tComment.comment;
-          }
+      for (final TranslatedComment tComment : ugyvitelProduct.comment.tComment) {
+        if (tComment.languageId.equals(webshopI18n.language)) {
+          unasProduct.description.shortDesc = tComment.comment;
         }
+      }
       unasProduct.description.longDesc = "";
       unitPrice.type = "normal";
       unitPrice.net = ugyvitelProduct.unitPrice;
-      //unitPrice.gross = "0";
+      // unitPrice.gross = "0";
       unasProduct.Prices.prices.add(unitPrice);
-      Price unasSalePrice = new Price();
+      final Price unasSalePrice = new Price();
       unasSalePrice.type = "sale";
       unasSalePrice.net = ugyvitelProduct.discountPrice;
       unasSalePrice.gross = "13654";
       unasProduct.Prices.prices.add(unasSalePrice);
-      if(ugyvitelProduct.priceRules != null){          
-        if(ugyvitelProduct.priceRules.priceRule != null){
-          for (PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
-            if(pRule.priceRuleName.equals("Egységár")){
+      if (ugyvitelProduct.priceRules != null) {
+        if (ugyvitelProduct.priceRules.priceRule != null) {
+          for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
+            if (pRule.priceRuleName.equals("Egységár")) {
               continue;
             } else {
-              if(pRule.price.equals(ugyvitelProduct.discountPrice)){
-                for (Price unasPrices : unasProduct.Prices.prices) {
-                  if(unasPrices.type.equals("sale")){
+              if (pRule.price.equals(ugyvitelProduct.discountPrice)) {
+                for (final Price unasPrices : unasProduct.Prices.prices) {
+                  if (unasPrices.type.equals("sale")) {
                     unasPrices.saleStart = pRule.validFrom;
                     unasPrices.saleEnd = pRule.validTo;
                     unasPrices.net = ugyvitelProduct.discountPrice;
@@ -669,12 +717,12 @@ public class UnasApiServiceImpl implements UnasApiService {
                   }
                 }
               } else {
-                Price unasPrice = new Price();
-                unasPrice.type =  "special"; //felülvizsgálni
-                unasPrice.net = pRule.price; //felülvizsgálni
-                unasPrice.gross = "345"; //kötelező mező
-                unasPrice.start = pRule.validFrom; //felülvizsgálni
-                unasPrice.end = pRule.validTo; //felülvizsgálni
+                final Price unasPrice = new Price();
+                unasPrice.type = "special"; // felülvizsgálni
+                unasPrice.net = pRule.price; // felülvizsgálni
+                unasPrice.gross = "345"; // kötelező mező
+                unasPrice.start = pRule.validFrom; // felülvizsgálni
+                unasPrice.end = pRule.validTo; // felülvizsgálni
                 unasProduct.Prices.prices.add(unasPrice);
               }
             }
@@ -683,13 +731,34 @@ public class UnasApiServiceImpl implements UnasApiService {
       } else {
         unasProduct.Prices.prices.add(unitPrice);
       }
-      for (com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
-        Category unasCategory = new Category();
+      for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
+        final Category unasCategory = new Category();
         unasCategory.id = ugyvitelCatergoy.categoryId;
         unasProduct.categories.category.add(unasCategory);
       }
       unasProducts.products.add(unasProduct);
     }
     return unasProducts;
+  }
+
+  private boolean isValidUnasCustomer(UgyvitelCustomer ugyvitelCustomer){
+    if(ugyvitelCustomer.countryCode != "HU" 
+    || ugyvitelCustomer.email == null 
+    || ugyvitelCustomer.centralAddressName == null 
+    || ugyvitelCustomer.centralZip.length() < 4 
+    || ugyvitelCustomer.phone == null)
+    {
+      this.customerErrorResponse = new CustomerErrorResponse();
+
+     ResponseModel cResponseModel = new ResponseModel();
+
+     cResponseModel.id = ugyvitelCustomer.customerId;
+     cResponseModel.status = "Error";
+
+     this.customerErrorResponse.customer.add(cResponseModel);
+     
+     return false;
+    }
+    return true;
   }
 }

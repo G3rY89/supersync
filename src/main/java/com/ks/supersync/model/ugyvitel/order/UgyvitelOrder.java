@@ -47,6 +47,8 @@ public class UgyvitelOrder {
     public String invoicingPublicDomain;
     @XmlElement(name = "InvoicingCountry")
     public String invoicingCountry;
+    @XmlElement(name = "InvoicingCountryState")
+    public String invoicingCountryState;
     @XmlElement(name = "DeliveryName")
     public String deliveryName;
     @XmlElement(name = "DeliveryZip")
@@ -69,6 +71,8 @@ public class UgyvitelOrder {
     public String deliveryPublicDomain;
     @XmlElement(name = "DeliveryCountry")
     public String deliveryCountry;
+    @XmlElement(name = "DeliveryCountryState")
+    public String deliveryCountryState;
     @XmlElement(name = "OrderAddressZip")
     public String orderAddressZip;
     @XmlElement(name = "OrderAddressCity")
@@ -123,6 +127,12 @@ public class UgyvitelOrder {
     public String orderDate;
     @XmlElement(name = "OrderedDate")
     public String orderedDate;
+    @XmlElement(name = "NetValue")
+    public String netValue;
+    @XmlElement(name = "VatValue")
+    public String vatValue;
+    @XmlElement(name = "GrossValue")
+    public String grossValue;
     @XmlElement(name = "TransportMode")
     public String transportMode;
     @XmlElement(name = "TopComment")
