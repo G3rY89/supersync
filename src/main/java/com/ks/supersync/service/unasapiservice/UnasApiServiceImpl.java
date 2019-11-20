@@ -185,13 +185,13 @@ public class UnasApiServiceImpl implements UnasApiService {
     .build();
     final Response response = client.newCall(setCustomerRequest).execute();
     
-    jaxbContext = JAXBContext.newInstance(CustomerErrorResponse.class);
+    /* jaxbContext = JAXBContext.newInstance(CustomerErrorResponse.class);
     jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     sw = new StringWriter();
-    jaxbMarshaller.marshal(customerErrorResponse, sw);
+    jaxbMarshaller.marshal(customerErrorResponse, sw); */
 
-    return response.body().string() + sw.toString();
+    return response.body().string()/*  + sw.toString() */;
   }
 
   @Override
