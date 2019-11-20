@@ -164,12 +164,12 @@ public class UnasApiServiceImpl implements UnasApiService {
       throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCustomers.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(Customers);
+    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    StringReader reader = new StringReader(Customers);
 
-    final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
 
-    final MediaType mediaType = MediaType.parse("application/xml");
+    MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -177,21 +177,26 @@ public class UnasApiServiceImpl implements UnasApiService {
     StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(ugyvitelCustomers), sw);
     
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
     
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
-    
-    final Request setCustomerRequest = new Request.Builder()
+    Request setCustomerRequest = new Request.Builder()
     .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
     .build();
-    final Response response = client.newCall(setCustomerRequest).execute();
-    
-    /* jaxbContext = JAXBContext.newInstance(CustomerErrorResponse.class);
-    jaxbMarshaller = jaxbContext.createMarshaller();
-    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    sw = new StringWriter();
-    jaxbMarshaller.marshal(customerErrorResponse, sw); */
+    Response response = client.newCall(setCustomerRequest).execute();
 
-    return response.body().string()/*  + sw.toString() */;
+    JAXBContext jaxbContextCer = JAXBContext.newInstance(CustomerErrorResponse.class);
+    Unmarshaller jaxbUnmarshallerCer = jaxbContextCer.createUnmarshaller();
+    StringReader readerCer = new StringReader(response.body().string());
+
+    CustomerErrorResponse cer = (CustomerErrorResponse) jaxbUnmarshallerCer.unmarshal(readerCer);
+
+    JAXBContext jaxbContextResp = JAXBContext.newInstance(CustomerErrorResponse.class);
+    Marshaller jaxbMarshallerResp = jaxbContextResp.createMarshaller();
+    jaxbMarshallerResp.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    StringWriter swResp = new StringWriter();
+    jaxbMarshaller.marshal(cer, swResp);
+
+    return sw.toString();
   }
 
   @Override
