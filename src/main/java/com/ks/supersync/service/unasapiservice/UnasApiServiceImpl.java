@@ -408,8 +408,8 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
 
-      System.out.println(isValidUnasCustomer(ugyvitelCustomer));
-      if(isValidUnasCustomer(ugyvitelCustomer)){
+     /*  System.out.println(isValidUnasCustomer(ugyvitelCustomer));
+      if(isValidUnasCustomer(ugyvitelCustomer)){ */
         final UnasCustomer unasCustomer = new UnasCustomer();
         
         unasCustomer.id = ugyvitelCustomer.customerId;
@@ -449,7 +449,7 @@ public class UnasApiServiceImpl implements UnasApiService {
           unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
         }
         unasCustomers.customer.add(unasCustomer);
-      }      
+      /* } */      
     }
     return unasCustomers;
   }
