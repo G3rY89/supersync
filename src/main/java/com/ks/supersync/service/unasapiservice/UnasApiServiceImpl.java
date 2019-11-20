@@ -177,19 +177,20 @@ public class UnasApiServiceImpl implements UnasApiService {
     StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(ugyvitelCustomers), sw);
     
+    
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
+    
+    final Request setCustomerRequest = new Request.Builder()
+    .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
+    .build();
+    final Response response = client.newCall(setCustomerRequest).execute();
+    
     jaxbContext = JAXBContext.newInstance(CustomerErrorResponse.class);
     jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     sw = new StringWriter();
     jaxbMarshaller.marshal(customerErrorResponse, sw);
-
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
-
-    final Request setCustomerRequest = new Request.Builder()
-        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
-        .build();
-    final Response response = client.newCall(setCustomerRequest).execute();
-
+    
     return response.body().string() + sw.toString();
   }
 
@@ -407,12 +408,10 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
 
-      
+      System.out.println(isValidUnasCustomer(ugyvitelCustomer));
       if(isValidUnasCustomer(ugyvitelCustomer)){
         final UnasCustomer unasCustomer = new UnasCustomer();
         
-        System.out.println(ugyvitelCustomer.email);
-        System.out.println("fasz");
         unasCustomer.id = ugyvitelCustomer.customerId;
         unasCustomer.email = ugyvitelCustomer.email;
         unasCustomer.contact.name = ugyvitelCustomer.customerName;
@@ -745,11 +744,11 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   private boolean isValidUnasCustomer(UgyvitelCustomer ugyvitelCustomer){
-    System.out.println(ugyvitelCustomer.countryCode);
+    /* System.out.println(ugyvitelCustomer.countryCode);
     System.out.println(ugyvitelCustomer.email);
     System.out.println(ugyvitelCustomer.centralAddressName);
     System.out.println(ugyvitelCustomer.centralZip);
-    System.out.println(ugyvitelCustomer.phone);
+    System.out.println(ugyvitelCustomer.phone); */
     if(ugyvitelCustomer.countryCode != "HU" 
     || ugyvitelCustomer.email == "" 
     || ugyvitelCustomer.centralAddressName == "" 
