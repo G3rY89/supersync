@@ -164,6 +164,13 @@ public class UnasApiServiceImpl implements UnasApiService {
     final StringReader reader = new StringReader(Customers);
 
     final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
+    final UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
+
+    ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
+
+    System.out.println(ugyvitelCustomers.customer.size());
+    System.out.println(validatedUgyvitelCustomers.customer.size());
 
     final MediaType mediaType = MediaType.parse("application/xml");
 
@@ -171,7 +178,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     final StringWriter sw = new StringWriter();
-    jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(ugyvitelCustomers), sw);
+    jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(validatedUgyvitelCustomers), sw);
     
     final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
@@ -237,6 +244,21 @@ public class UnasApiServiceImpl implements UnasApiService {
     return response.body().string();
   }
 
+  @Override
+  public void ValidateUgyvitelCustomersToUnas(UgyvitelCustomers ugyvitelCustomers, UgyvitelCustomers validatedUgyvitelCustomers, UgyvitelCustomers invalidUgyvitelCustomers){
+    for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
+      if(ugyvitelCustomer.countryCode != "HU" 
+      || ugyvitelCustomer.email == "" 
+      || ugyvitelCustomer.centralAddressName == "" 
+      || ugyvitelCustomer.centralZip.length() < 4 
+      || ugyvitelCustomer.phone.length() < 6
+      || ugyvitelCustomer.phone == ""){
+        invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
+      } else {
+        validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
+      }
+    }
+  }
   @Override
   public Object sendUgyvitelProductCategoryToUnas(final String apiKey, final String Categories)
       throws IOException, JAXBException {
