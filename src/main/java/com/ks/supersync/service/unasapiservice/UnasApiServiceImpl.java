@@ -250,12 +250,12 @@ public class UnasApiServiceImpl implements UnasApiService {
   @Override
   public void ValidateUgyvitelCustomersToUnas(UgyvitelCustomers ugyvitelCustomers, UgyvitelCustomers validatedUgyvitelCustomers, UgyvitelCustomers invalidUgyvitelCustomers){
     for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
-      if(ugyvitelCustomer.countryCode != "HU" 
-      || ugyvitelCustomer.email == "" 
-      || ugyvitelCustomer.centralAddressName == "" 
+      if(!ugyvitelCustomer.countryCode.equals("HU") 
+      || ugyvitelCustomer.email.equals("") 
+      || ugyvitelCustomer.centralAddressName.equals("") 
       || ugyvitelCustomer.centralZip.length() < 4 
       || ugyvitelCustomer.phone.length() < 6
-      || ugyvitelCustomer.phone == ""){
+      || ugyvitelCustomer.phone.equals("")){
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
