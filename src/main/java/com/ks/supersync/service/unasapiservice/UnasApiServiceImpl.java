@@ -11,8 +11,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import com.ks.supersync.model.response.CustomerErrorResponse;
-import com.ks.supersync.model.response.ResponseModel;
 import com.ks.supersync.model.supersync.I18n;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategories;
 import com.ks.supersync.model.ugyvitel.category.UgyvitelCategory;
@@ -59,8 +57,6 @@ public class UnasApiServiceImpl implements UnasApiService {
   private String unasapiServiceUrl;
 
   private final I18nRepository i18nRepository;
-
-  private CustomerErrorResponse customerErrorResponse;
 
   public UnasApiServiceImpl(final I18nRepository i18nRepository) {
     this.i18nRepository = i18nRepository;
@@ -164,39 +160,27 @@ public class UnasApiServiceImpl implements UnasApiService {
       throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCustomers.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Customers);
+    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    final StringReader reader = new StringReader(Customers);
 
-    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+    final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
+    final StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(ugyvitelCustomers), sw);
     
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
-    
-    Request setCustomerRequest = new Request.Builder()
-    .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
-    .build();
-    Response response = client.newCall(setCustomerRequest).execute();
+    final RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    JAXBContext jaxbContextCer = JAXBContext.newInstance(CustomerErrorResponse.class);
-    Unmarshaller jaxbUnmarshallerCer = jaxbContextCer.createUnmarshaller();
-    StringReader readerCer = new StringReader(response.body().string());
+    final Request setCustomerRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
+        .build();
+    final Response response = client.newCall(setCustomerRequest).execute();
 
-    CustomerErrorResponse cer = (CustomerErrorResponse) jaxbUnmarshallerCer.unmarshal(readerCer);
-
-    JAXBContext jaxbContextResp = JAXBContext.newInstance(CustomerErrorResponse.class);
-    Marshaller jaxbMarshallerResp = jaxbContextResp.createMarshaller();
-    jaxbMarshallerResp.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter swResp = new StringWriter();
-    jaxbMarshaller.marshal(cer, swResp);
-
-    return sw.toString();
+    return response.body().string();
   }
 
   @Override
@@ -413,8 +397,6 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
 
-     /*  System.out.println(isValidUnasCustomer(ugyvitelCustomer));
-      if(isValidUnasCustomer(ugyvitelCustomer)){ */
         final UnasCustomer unasCustomer = new UnasCustomer();
         
         unasCustomer.id = ugyvitelCustomer.customerId;
@@ -453,8 +435,7 @@ public class UnasApiServiceImpl implements UnasApiService {
           unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
           unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
         }
-        unasCustomers.customer.add(unasCustomer);
-      /* } */      
+        unasCustomers.customer.add(unasCustomer);    
     }
     return unasCustomers;
   }
@@ -746,33 +727,5 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasProducts.products.add(unasProduct);
     }
     return unasProducts;
-  }
-
-  private boolean isValidUnasCustomer(UgyvitelCustomer ugyvitelCustomer){
-    /* System.out.println(ugyvitelCustomer.countryCode);
-    System.out.println(ugyvitelCustomer.email);
-    System.out.println(ugyvitelCustomer.centralAddressName);
-    System.out.println(ugyvitelCustomer.centralZip);
-    System.out.println(ugyvitelCustomer.phone); */
-    if(ugyvitelCustomer.countryCode != "HU" 
-    || ugyvitelCustomer.email == "" 
-    || ugyvitelCustomer.centralAddressName == "" 
-    /* || ugyvitelCustomer.centralZip.length() < 4 
-    || ugyvitelCustomer.phone.length() < 6 */
-    || ugyvitelCustomer.phone == ""
-    )
-    {
-      this.customerErrorResponse = new CustomerErrorResponse();
-
-     ResponseModel cResponseModel = new ResponseModel();
-
-     cResponseModel.id = ugyvitelCustomer.customerId;
-     cResponseModel.status = "Error";
-
-     this.customerErrorResponse.customer.add(cResponseModel);
-
-     return false;
-    }
-    return true;
   }
 }

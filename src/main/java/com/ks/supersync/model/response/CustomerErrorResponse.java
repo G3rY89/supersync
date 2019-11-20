@@ -5,11 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.*;
 
-import com.ks.supersync.model.unas.customer.UnasCustomers;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Customers")
-@XmlSeeAlso({UnasCustomers.class})
 public class CustomerErrorResponse{
 
     @XmlElement(name = "Customer")
