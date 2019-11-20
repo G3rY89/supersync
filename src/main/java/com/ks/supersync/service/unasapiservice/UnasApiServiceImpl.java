@@ -745,6 +745,11 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   private boolean isValidUnasCustomer(UgyvitelCustomer ugyvitelCustomer){
+    System.out.println(ugyvitelCustomer.countryCode);
+    System.out.println(ugyvitelCustomer.email);
+    System.out.println(ugyvitelCustomer.centralAddressName);
+    System.out.println(ugyvitelCustomer.centralZip);
+    System.out.println(ugyvitelCustomer.phone);
     if(ugyvitelCustomer.countryCode != "HU" 
     || ugyvitelCustomer.email == "" 
     || ugyvitelCustomer.centralAddressName == "" 
