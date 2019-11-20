@@ -165,10 +165,9 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
     final UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
+    validatedUgyvitelCustomers.customer = new ArrayList<>();
     final UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
-
-    System.out.println(ugyvitelCustomers.customer.size());
-    System.out.println(validatedUgyvitelCustomers.customer.size());
+    invalidUgyvitelCustomers.customer = new ArrayList<>();
 
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
 
