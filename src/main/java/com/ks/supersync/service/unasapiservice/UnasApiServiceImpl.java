@@ -747,6 +747,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     || ugyvitelCustomer.centralAddressName == null 
     || ugyvitelCustomer.centralZip.length() < 4 
     || ugyvitelCustomer.phone.length() < 6
+    || ugyvitelCustomer.phone == null
     )
     {
       this.customerErrorResponse = new CustomerErrorResponse();
