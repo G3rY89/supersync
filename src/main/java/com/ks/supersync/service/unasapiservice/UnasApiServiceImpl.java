@@ -407,12 +407,12 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
 
-      System.out.println(ugyvitelCustomer.email);
-      System.out.println("fasz");
-
+      
       if(isValidUnasCustomer(ugyvitelCustomer)){
         final UnasCustomer unasCustomer = new UnasCustomer();
-  
+        
+        System.out.println(ugyvitelCustomer.email);
+        System.out.println("fasz");
         unasCustomer.id = ugyvitelCustomer.customerId;
         unasCustomer.email = ugyvitelCustomer.email;
         unasCustomer.contact.name = ugyvitelCustomer.customerName;
