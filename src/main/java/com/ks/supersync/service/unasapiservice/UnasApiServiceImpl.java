@@ -743,11 +743,11 @@ public class UnasApiServiceImpl implements UnasApiService {
 
   private boolean isValidUnasCustomer(UgyvitelCustomer ugyvitelCustomer){
     if(ugyvitelCustomer.countryCode != "HU" 
-    || ugyvitelCustomer.email == null 
-    || ugyvitelCustomer.centralAddressName == null 
+    || ugyvitelCustomer.email == "" 
+    || ugyvitelCustomer.centralAddressName == "" 
     || ugyvitelCustomer.centralZip.length() < 4 
     || ugyvitelCustomer.phone.length() < 6
-    || ugyvitelCustomer.phone == null
+    || ugyvitelCustomer.phone == ""
     )
     {
       this.customerErrorResponse = new CustomerErrorResponse();
