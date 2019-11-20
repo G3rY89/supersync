@@ -172,6 +172,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
 
     System.out.println(ugyvitelCustomers.customer.size());
+    System.out.println(invalidUgyvitelCustomers.customer.size());
     System.out.println(validatedUgyvitelCustomers.customer.size());
 
     final MediaType mediaType = MediaType.parse("application/xml");
