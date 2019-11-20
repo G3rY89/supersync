@@ -190,7 +190,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     sw = new StringWriter();
     jaxbMarshaller.marshal(customerErrorResponse, sw);
-    
+
     return response.body().string() + sw.toString();
   }
 
@@ -752,8 +752,8 @@ public class UnasApiServiceImpl implements UnasApiService {
     if(ugyvitelCustomer.countryCode != "HU" 
     || ugyvitelCustomer.email == "" 
     || ugyvitelCustomer.centralAddressName == "" 
-    || ugyvitelCustomer.centralZip.length() < 4 
-    || ugyvitelCustomer.phone.length() < 6
+    /* || ugyvitelCustomer.centralZip.length() < 4 
+    || ugyvitelCustomer.phone.length() < 6 */
     || ugyvitelCustomer.phone == ""
     )
     {
