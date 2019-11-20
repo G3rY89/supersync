@@ -746,7 +746,8 @@ public class UnasApiServiceImpl implements UnasApiService {
     || ugyvitelCustomer.email == null 
     || ugyvitelCustomer.centralAddressName == null 
     || ugyvitelCustomer.centralZip.length() < 4 
-    || ugyvitelCustomer.phone == null)
+    || ugyvitelCustomer.phone.length() < 6
+    )
     {
       this.customerErrorResponse = new CustomerErrorResponse();
 
@@ -756,7 +757,7 @@ public class UnasApiServiceImpl implements UnasApiService {
      cResponseModel.status = "Error";
 
      this.customerErrorResponse.customer.add(cResponseModel);
-     
+
      return false;
     }
     return true;
