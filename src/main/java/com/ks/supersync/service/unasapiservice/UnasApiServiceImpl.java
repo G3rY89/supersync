@@ -434,6 +434,8 @@ public class UnasApiServiceImpl implements UnasApiService {
         unasCustomer.addresses.invoice.city = ugyvitelCustomer.centralCity;
         unasCustomer.addresses.invoice.country = ugyvitelCustomer.centralCountry;
         unasCustomer.addresses.invoice.countryCode = ugyvitelCustomer.countryCode.toLowerCase();
+        unasCustomer.addresses.invoice.taxNumber = ugyvitelCustomer.taxNumber;
+        unasCustomer.addresses.invoice.euTaxNumber = ugyvitelCustomer.euTaxNumber;
         unasCustomer.addresses.invoice.name = ugyvitelCustomer.centralAddressName != null
             ? ugyvitelCustomer.centralAddressName
             : ugyvitelCustomer.customerName;
