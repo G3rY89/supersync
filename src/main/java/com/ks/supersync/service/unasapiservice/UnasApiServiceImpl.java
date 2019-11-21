@@ -179,7 +179,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     if(validatedUgyvitelCustomers.customer.size() == 0){
       return null;
     }
-    
+
     final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
@@ -261,7 +261,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       || ugyvitelCustomer.centralZip.length() < 4 
       || ugyvitelCustomer.phone.length() < 6
       || ugyvitelCustomer.phone.equals("")
-      || ugyvitelCustomer.taxNumber.length() < 11){
+      || ugyvitelCustomer.taxNumber.length() != 11){
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
