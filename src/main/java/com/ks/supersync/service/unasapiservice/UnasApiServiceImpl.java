@@ -169,6 +169,10 @@ public class UnasApiServiceImpl implements UnasApiService {
     final UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
     invalidUgyvitelCustomers.customer = new ArrayList<>();
 
+    if(validatedUgyvitelCustomers.customer.size() == 0){
+      return null;
+    }
+
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
 
     System.out.println(ugyvitelCustomers.customer.size());
@@ -256,13 +260,14 @@ public class UnasApiServiceImpl implements UnasApiService {
       || ugyvitelCustomer.centralZip.length() < 4 
       || ugyvitelCustomer.phone.length() < 6
       || ugyvitelCustomer.phone.equals("")
-      || ugyvitelCustomer.taxNumber.length() != 9){
+      || ugyvitelCustomer.taxNumber.length() < 11){
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
       }
     }
   }
+  
   @Override
   public Object sendUgyvitelProductCategoryToUnas(final String apiKey, final String Categories)
       throws IOException, JAXBException {
