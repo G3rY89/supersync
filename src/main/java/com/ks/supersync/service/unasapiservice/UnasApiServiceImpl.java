@@ -160,13 +160,13 @@ public class UnasApiServiceImpl implements UnasApiService {
       throws IOException, JAXBException {
 
     JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCustomers.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(Customers);
+     Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+     StringReader reader = new StringReader(Customers);
 
-    final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
-    final UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
+     UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+     UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
     validatedUgyvitelCustomers.customer = new ArrayList<>();
-    final UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
+     UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
     invalidUgyvitelCustomers.customer = new ArrayList<>();
 
     
@@ -180,22 +180,28 @@ public class UnasApiServiceImpl implements UnasApiService {
       return null;
     }
 
-    final MediaType mediaType = MediaType.parse("application/xml");
+     MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    final StringWriter sw = new StringWriter();
+     StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(validatedUgyvitelCustomers), sw);
     
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
+     RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    final Request setCustomerRequest = new Request.Builder()
+     Request setCustomerRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    final Response response = client.newCall(setCustomerRequest).execute();
+     Response response = client.newCall(setCustomerRequest).execute();
 
-    return response.body().string();
+    jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
+    jaxbMarshaller = jaxbContext.createMarshaller();
+    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    sw = new StringWriter();
+    jaxbMarshaller.marshal(response.body().string(), sw);
+
+    return sw.toString();
   }
 
   @Override

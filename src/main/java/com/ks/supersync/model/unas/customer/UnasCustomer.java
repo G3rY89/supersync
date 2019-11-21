@@ -42,6 +42,10 @@ public class UnasCustomer {
     public List<Restriction> restrictions;
     @XmlElement(name = "Others")
     public Others others;
+    @XmlElement(name = "Status")
+    public String status;
+    @XmlElement(name = "Error")
+    public String error;
 
     public UnasCustomer(){
         this.contact = new Contact();
