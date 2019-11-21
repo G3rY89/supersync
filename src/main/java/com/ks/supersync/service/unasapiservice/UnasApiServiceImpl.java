@@ -169,16 +169,17 @@ public class UnasApiServiceImpl implements UnasApiService {
     final UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
     invalidUgyvitelCustomers.customer = new ArrayList<>();
 
-    if(validatedUgyvitelCustomers.customer.size() == 0){
-      return null;
-    }
-
+    
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
-
+    
     System.out.println(ugyvitelCustomers.customer.size());
     System.out.println(invalidUgyvitelCustomers.customer.size());
     System.out.println(validatedUgyvitelCustomers.customer.size());
-
+    
+    if(validatedUgyvitelCustomers.customer.size() == 0){
+      return null;
+    }
+    
     final MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
