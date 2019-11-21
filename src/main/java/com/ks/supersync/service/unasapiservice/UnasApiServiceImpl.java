@@ -255,7 +255,8 @@ public class UnasApiServiceImpl implements UnasApiService {
       || ugyvitelCustomer.centralAddressName.equals("") 
       || ugyvitelCustomer.centralZip.length() < 4 
       || ugyvitelCustomer.phone.length() < 6
-      || ugyvitelCustomer.phone.equals("")){
+      || ugyvitelCustomer.phone.equals("")
+      || ugyvitelCustomer.taxNumber.length() != 9){
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
