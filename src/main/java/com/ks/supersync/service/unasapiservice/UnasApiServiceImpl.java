@@ -151,13 +151,9 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     MediaType mediaType = MediaType.parse("application/xml");
 
-    jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
-    jaxbMarshaller.marshal(mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey), sw);
+    UnasProducts mappedUnasProducts = mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasProducts.class, mappedUnasProducts));
 
     Request setProductRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_PRODUCTS.toString()).post(body).addHeader("ApiKey", apiKey)
