@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import com.ks.supersync.model.ugyvitel.customer.UgyvitelCustomers;
 import com.ks.supersync.model.ugyvitel.order.UgyvitelOrders;
 import com.ks.supersync.model.ugyvitel.product.UgyvitelProducts;
+import com.ks.supersync.model.unas.customer.UnasCustomers;
 
 
 public interface UnasApiService {
@@ -28,4 +29,6 @@ public interface UnasApiService {
     public Object sendUgyvitelProductCategoryToUnas(String apiKey, String Categories) throws IOException, JAXBException;
 
     public void ValidateUgyvitelCustomersToUnas(UgyvitelCustomers ugyvitelCustomers, UgyvitelCustomers validatedUgyvitelCustomers, UgyvitelCustomers invalidUgyvitelCustomers);
+    
+    public UnasCustomers mapUgyvitelCustomersToUnasCustomers(UgyvitelCustomers ugyvitelCustomers);
 }

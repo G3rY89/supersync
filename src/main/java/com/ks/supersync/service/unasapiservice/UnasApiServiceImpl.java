@@ -61,8 +61,10 @@ public class UnasApiServiceImpl implements UnasApiService {
   private JAXBContext jaxbContext;
 
   private Unmarshaller jaxbUnmarshaller;
+  private Marshaller jaxbMarshaller;
 
   private StringReader reader;
+  private StringWriter writer;
 
   public UnasApiServiceImpl(final I18nRepository i18nRepository) {
     this.i18nRepository = i18nRepository;
@@ -77,6 +79,17 @@ public class UnasApiServiceImpl implements UnasApiService {
 
   }
 
+  private String createXMLStringFromObject(Class c, Object mappedObject) throws JAXBException {
+
+    this.jaxbContext = JAXBContext.newInstance(c);
+    this.jaxbMarshaller = jaxbContext.createMarshaller();
+    this.jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    this.writer = new StringWriter();
+    this.jaxbMarshaller.marshal(mappedObject, this.writer);
+
+    return this.writer.toString();
+  }
+
   @Override
   public UgyvitelProducts getUnasProductsToUgyvitel(final String apiKey) throws IOException, JAXBException {
 
@@ -85,16 +98,12 @@ public class UnasApiServiceImpl implements UnasApiService {
     client.newBuilder().connectTimeout(15, TimeUnit.SECONDS).writeTimeout(15, TimeUnit.SECONDS).readTimeout(15,
         TimeUnit.SECONDS);
 
-    final Request request = new Request.Builder()
+    Request request = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString() + "?debug=true").get()
         .addHeader("ApiKey", apiKey).build();
-    final Response response = client.newCall(request).execute();
+    Response response = client.newCall(request).execute();
 
-    final JAXBContext jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(response.body().string());
-
-    final UnasProducts unasProducts = (UnasProducts) jaxbUnmarshaller.unmarshal(reader);
+    UnasProducts unasProducts = (UnasProducts) createObjectFromXMLString(response.body().string(), UnasProducts.class);
 
     uProducts = mapUnasProductsToUgyvitelProducts(unasProducts, apiKey);
 
@@ -106,16 +115,12 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     UgyvitelCustomers uCustomers = new UgyvitelCustomers();
 
-    final Request request = new Request.Builder()
+    Request request = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_CUSTOMERS.toString()).get().addHeader("ApiKey", apiKey)
         .build();
-    final Response response = client.newCall(request).execute();
+    Response response = client.newCall(request).execute();
 
-    final JAXBContext jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(response.body().string());
-
-    final UnasCustomers unasCustomers = (UnasCustomers) jaxbUnmarshaller.unmarshal(reader);
+    UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
 
@@ -127,15 +132,11 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     UgyvitelOrders uOrders = new UgyvitelOrders();
 
-    final Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_ORDERS.toString())
+    Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_ORDERS.toString())
         .get().addHeader("ApiKey", apiKey).build();
-    final Response response = client.newCall(request).execute();
+    Response response = client.newCall(request).execute();
 
-    final JAXBContext jaxbContext = JAXBContext.newInstance(UnasOrders.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(response.body().string());
-
-    final UnasOrders unasOrders = (UnasOrders) jaxbUnmarshaller.unmarshal(reader);
+    UnasOrders unasOrders = (UnasOrders) createObjectFromXMLString(response.body().string(), UnasOrders.class);
 
     uOrders = mapUnasOrdersToUgyvitelOrders(unasOrders);
 
@@ -146,26 +147,22 @@ public class UnasApiServiceImpl implements UnasApiService {
   public Object sendUgyvitelProductToUnas(final String apiKey, final String Products)
       throws IOException, JAXBException {
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelProducts.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(Products);
+    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) createObjectFromXMLString(Products, UgyvitelProducts.class);
 
-    final UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
-
-    final MediaType mediaType = MediaType.parse("application/xml");
+    MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    final StringWriter sw = new StringWriter();
+    StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey), sw);
 
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    final Request setProductRequest = new Request.Builder()
+    Request setProductRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_PRODUCTS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    final Response response = client.newCall(setProductRequest).execute();
+    Response response = client.newCall(setProductRequest).execute();
 
     return response.body().string();
   }
@@ -175,6 +172,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       throws IOException, JAXBException {
 
     UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) createObjectFromXMLString(Customers, UgyvitelCustomers.class);
+
     UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
     validatedUgyvitelCustomers.customer = new ArrayList<>();
     UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
@@ -182,13 +180,36 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
     
-    System.out.println(ugyvitelCustomers.customer.size());
-    System.out.println(invalidUgyvitelCustomers.customer.size());
-    System.out.println(validatedUgyvitelCustomers.customer.size());
-    
     if(validatedUgyvitelCustomers.customer.size() == 0){
       return "No valid customer found for UNAS";
     }
+
+    MediaType mediaType = MediaType.parse("application/xml");
+
+    UnasCustomers mappedUnasCustomers = mapUgyvitelCustomersToUnasCustomers(validatedUgyvitelCustomers);
+    
+    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasCustomers.class, mappedUnasCustomers));
+
+    Request setCustomerRequest = new Request.Builder()
+        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
+        .build();
+    Response responseFromUnas = client.newCall(setCustomerRequest).execute();
+
+    UnasCustomers responseToUgyvitel = (UnasCustomers) createObjectFromXMLString(responseFromUnas.body().string(), UnasCustomers.class);
+
+    for (UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
+      UnasCustomer invalidCustomer = new UnasCustomer();
+      invalidCustomer.email = ugyvCustomer.email;
+      invalidCustomer.status = "error";
+      responseToUgyvitel.customer.add(invalidCustomer);
+    }
+    return responseToUgyvitel;
+  }
+
+  @Override
+  public Object sendUgyvitelOrderToUnas(final String apiKey, final String Orders) throws IOException, JAXBException {
+
+    UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) createObjectFromXMLString(Orders, UgyvitelOrders.class);
 
     MediaType mediaType = MediaType.parse("application/xml");
 
@@ -196,53 +217,14 @@ public class UnasApiServiceImpl implements UnasApiService {
     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     StringWriter sw = new StringWriter();
-    jaxbMarshaller.marshal(mapUgyvitelCustomersToUnasCustomers(validatedUgyvitelCustomers), sw);
-    
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
-
-    Request setCustomerRequest = new Request.Builder()
-        .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
-        .build();
-    Response response = client.newCall(setCustomerRequest).execute();
-
-    jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    reader = new StringReader(response.body().string());
-
-    UnasCustomers resp = (UnasCustomers) jaxbUnmarshaller.unmarshal(reader);
-
-    for (UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
-      UnasCustomer invalidCustomer = new UnasCustomer();
-      invalidCustomer.email = ugyvCustomer.email;
-      invalidCustomer.status = "error";
-      resp.customer.add(invalidCustomer);
-    }
-    return resp;
-  }
-
-  @Override
-  public Object sendUgyvitelOrderToUnas(final String apiKey, final String Orders) throws IOException, JAXBException {
-
-    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelOrders.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(Orders);
-
-    final UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) jaxbUnmarshaller.unmarshal(reader);
-
-    final MediaType mediaType = MediaType.parse("application/xml");
-
-    jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    final StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelOrdersToUnasOrders(ugyvitelOrders), sw);
 
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    final Request setOrderRequest = new Request.Builder()
+    Request setOrderRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_ORDERS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    final Response response = client.newCall(setOrderRequest).execute();
+    Response response = client.newCall(setOrderRequest).execute();
 
     return response.body().string();
   }
@@ -250,71 +232,46 @@ public class UnasApiServiceImpl implements UnasApiService {
   @Override
   public Object sendUgyvitelStockToUnas(final String apiKey, final String Products) throws IOException, JAXBException {
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelProducts.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(Products);
+    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) createObjectFromXMLString(Products, UgyvitelProducts.class);
 
-    final UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) jaxbUnmarshaller.unmarshal(reader);
-
-    final MediaType mediaType = MediaType.parse("application/xml");
+    MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    final StringWriter sw = new StringWriter();
+    StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelStocksToUnasStocks(ugyvitelProducts), sw);
 
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    final Request setStockRequest = new Request.Builder()
+    Request setStockRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_STOCKS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    final Response response = client.newCall(setStockRequest).execute();
+    Response response = client.newCall(setStockRequest).execute();
 
     return response.body().string();
-  }
-
-  @Override
-  public void ValidateUgyvitelCustomersToUnas(UgyvitelCustomers ugyvitelCustomers, UgyvitelCustomers validatedUgyvitelCustomers, UgyvitelCustomers invalidUgyvitelCustomers){
-    for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
-      if(!ugyvitelCustomer.countryCode.equals("HU") 
-      || ugyvitelCustomer.email.equals("") 
-      || ugyvitelCustomer.centralAddressName.equals("") 
-      || ugyvitelCustomer.centralZip.length() < 4 
-      || ugyvitelCustomer.phone.length() < 6
-      || ugyvitelCustomer.phone.equals("")
-      || ugyvitelCustomer.taxNumber.length() != 11){
-        invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
-      } else {
-        validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
-      }
-    }
   }
   
   @Override
   public Object sendUgyvitelProductCategoryToUnas(final String apiKey, final String Categories)
       throws IOException, JAXBException {
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCategories.class);
-    final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    final StringReader reader = new StringReader(Categories);
+    UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) createObjectFromXMLString(Categories, UgyvitelCategories.class);
 
-    final UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) jaxbUnmarshaller.unmarshal(reader);
-
-    final MediaType mediaType = MediaType.parse("application/xml");
+    MediaType mediaType = MediaType.parse("application/xml");
 
     jaxbContext = JAXBContext.newInstance(UnasCategories.class);
-    final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
     jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    final StringWriter sw = new StringWriter();
+    StringWriter sw = new StringWriter();
     jaxbMarshaller.marshal(mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories), sw);
 
-    final RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, sw.toString());
 
-    final Request setCategoryRequest = new Request.Builder()
+    Request setCategoryRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CATEGORIES.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    final Response response = client.newCall(setCategoryRequest).execute();
+    Response response = client.newCall(setCategoryRequest).execute();
 
     return response.body().string();
   }
@@ -444,7 +401,8 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasOrders;
   }
 
-  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(final UgyvitelCustomers ugyvitelCustomers) {
+  @Override
+  public UnasCustomers mapUgyvitelCustomersToUnasCustomers(final UgyvitelCustomers ugyvitelCustomers) {
     final UnasCustomers unasCustomers = new UnasCustomers();
 
     unasCustomers.customer = new ArrayList<>();
@@ -785,5 +743,22 @@ public class UnasApiServiceImpl implements UnasApiService {
       unasProducts.products.add(unasProduct);
     }
     return unasProducts;
+  }
+
+  @Override
+  public void ValidateUgyvitelCustomersToUnas(UgyvitelCustomers ugyvitelCustomers, UgyvitelCustomers validatedUgyvitelCustomers, UgyvitelCustomers invalidUgyvitelCustomers){
+    for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
+      if(!ugyvitelCustomer.countryCode.equals("HU") 
+      || ugyvitelCustomer.email.equals("") 
+      || ugyvitelCustomer.centralAddressName.equals("") 
+      || ugyvitelCustomer.centralZip.length() < 4 
+      || ugyvitelCustomer.phone.length() < 6
+      || ugyvitelCustomer.phone.equals("")
+      || ugyvitelCustomer.taxNumber.length() != 11){
+        invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
+      } else {
+        validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
+      }
+    }
   }
 }
