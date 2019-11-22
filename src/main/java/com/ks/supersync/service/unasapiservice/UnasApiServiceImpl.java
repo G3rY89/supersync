@@ -120,8 +120,6 @@ public class UnasApiServiceImpl implements UnasApiService {
         .build();
     Response response = client.newCall(request).execute();
 
-    System.out.println(response.body().string());
-
     UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
