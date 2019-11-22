@@ -4,8 +4,8 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class UgyvitelCustomer {
 
-    @XmlElement(name = "CustomerId")
-    public String customerId;
+    @XmlElement(name = "LocalId")
+    public String localId;
     @XmlElement(name = "WebshopId")
     public String webshopId;
     @XmlElement(name = "CustomerCode")

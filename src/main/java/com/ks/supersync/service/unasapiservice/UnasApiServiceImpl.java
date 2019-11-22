@@ -46,7 +46,6 @@ import com.ks.supersync.repository.I18nRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import net.bytebuddy.dynamic.scaffold.MethodRegistry.Handler.ForAbstractMethod;
 import okhttp3.*;
 
 @Service
@@ -204,8 +203,9 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     for (UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
       UnasCustomer invalidCustomer = new UnasCustomer();
-      invalidCustomer.id = ugyvCustomer.customerId;
+      invalidCustomer.id = ugyvCustomer.localId;
       invalidCustomer.email = ugyvCustomer.email;
+      invalidCustomer.status = "error";
       resp.customer.add(invalidCustomer);
     }
     return resp;
@@ -444,7 +444,7 @@ public class UnasApiServiceImpl implements UnasApiService {
 
         final UnasCustomer unasCustomer = new UnasCustomer();
         
-        unasCustomer.id = ugyvitelCustomer.customerId;
+        unasCustomer.id = ugyvitelCustomer.localId;
         unasCustomer.email = ugyvitelCustomer.email;
         unasCustomer.contact.name = ugyvitelCustomer.customerName;
         unasCustomer.contact.phone = ugyvitelCustomer.phone;
