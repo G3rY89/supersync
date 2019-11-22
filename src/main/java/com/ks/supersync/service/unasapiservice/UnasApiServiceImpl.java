@@ -203,7 +203,6 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     for (UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
       UnasCustomer invalidCustomer = new UnasCustomer();
-      invalidCustomer.id = ugyvCustomer.localId;
       invalidCustomer.email = ugyvCustomer.email;
       invalidCustomer.status = "error";
       resp.customer.add(invalidCustomer);
