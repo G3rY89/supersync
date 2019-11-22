@@ -511,7 +511,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelCustomer.centralCountry = unasCustomer.addresses.invoice.country;
       ugyvitelCustomer.centralZip = unasCustomer.addresses.invoice.ZIP;
       ugyvitelCustomer.centralCity = unasCustomer.addresses.invoice.city;
-      ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.streetName;
+      ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.street;
       ugyvitelCustomer.centralPublicDomain = unasCustomer.addresses.invoice.streetType;
       ugyvitelCustomer.centralStaircase = "";
       ugyvitelCustomer.centralDoor = "";
