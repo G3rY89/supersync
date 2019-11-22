@@ -443,7 +443,7 @@ public class UnasApiServiceImpl implements UnasApiService {
 
         final UnasCustomer unasCustomer = new UnasCustomer();
         
-        unasCustomer.id = ugyvitelCustomer.localId;
+        unasCustomer.id = ugyvitelCustomer.customerId;
         unasCustomer.email = ugyvitelCustomer.email;
         unasCustomer.contact.name = ugyvitelCustomer.customerName;
         unasCustomer.contact.phone = ugyvitelCustomer.phone;
