@@ -6,6 +6,8 @@ public class UgyvitelCustomer {
 
     @XmlElement(name = "LocalId")
     public String localId;
+    @XmlElement(name = "CustomerId")
+    public String customerId;
     @XmlElement(name = "WebshopId")
     public String webshopId;
     @XmlElement(name = "CustomerCode")
