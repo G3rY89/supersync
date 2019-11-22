@@ -120,6 +120,8 @@ public class UnasApiServiceImpl implements UnasApiService {
         .build();
     Response response = client.newCall(request).execute();
 
+    System.out.println(response.body().string());
+
     UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
@@ -506,12 +508,10 @@ public class UnasApiServiceImpl implements UnasApiService {
         ugyvitelCustomer.euTaxNumber = unasCustomer.addresses.invoice.euTaxNumber;
       }
       ugyvitelCustomer.centralAddressName = unasCustomer.addresses.invoice.name;
-      System.out.println(unasCustomer.addresses.invoice.name);
       ugyvitelCustomer.centralCountry = unasCustomer.addresses.invoice.country;
       ugyvitelCustomer.centralZip = unasCustomer.addresses.invoice.ZIP;
       ugyvitelCustomer.centralCity = unasCustomer.addresses.invoice.city;
       ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.streetName;
-      System.out.println(unasCustomer.addresses.invoice.streetName);
       ugyvitelCustomer.centralPublicDomain = unasCustomer.addresses.invoice.streetType;
       ugyvitelCustomer.centralStaircase = "";
       ugyvitelCustomer.centralDoor = "";
