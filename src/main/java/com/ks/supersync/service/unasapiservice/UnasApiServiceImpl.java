@@ -46,6 +46,7 @@ import com.ks.supersync.repository.I18nRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import net.bytebuddy.dynamic.scaffold.MethodRegistry.Handler.ForAbstractMethod;
 import okhttp3.*;
 
 @Service
@@ -177,7 +178,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     System.out.println(validatedUgyvitelCustomers.customer.size());
     
     if(validatedUgyvitelCustomers.customer.size() == 0){
-      return null;
+      return "No valid customer found for UNAS";
     }
 
     MediaType mediaType = MediaType.parse("application/xml");
@@ -201,6 +202,12 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     UnasCustomers resp = (UnasCustomers) jaxbUnmarshaller.unmarshal(reader);
 
+    for (UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
+      UnasCustomer invalidCustomer = new UnasCustomer();
+      invalidCustomer.id = ugyvCustomer.customerId;
+      invalidCustomer.email = ugyvCustomer.email;
+      resp.customer.add(invalidCustomer);
+    }
     return resp;
   }
 
