@@ -58,8 +58,23 @@ public class UnasApiServiceImpl implements UnasApiService {
 
   private final I18nRepository i18nRepository;
 
+  private JAXBContext jaxbContext;
+
+  private Unmarshaller jaxbUnmarshaller;
+
+  private StringReader reader;
+
   public UnasApiServiceImpl(final I18nRepository i18nRepository) {
     this.i18nRepository = i18nRepository;
+  }
+
+  private Object createObjectFromXMLString(String XMLString, Class c) throws JAXBException {
+
+    this.jaxbContext = JAXBContext.newInstance(c);
+    this.jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+    this.reader = new StringReader(XMLString);
+    return jaxbUnmarshaller.unmarshal(reader);
+
   }
 
   @Override
@@ -159,17 +174,12 @@ public class UnasApiServiceImpl implements UnasApiService {
   public Object sendUgyvitelCustomerToUnas(final String apiKey, final String Customers)
       throws IOException, JAXBException {
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(UgyvitelCustomers.class);
-    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-    StringReader reader = new StringReader(Customers);
-
-    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) jaxbUnmarshaller.unmarshal(reader);
+    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) createObjectFromXMLString(Customers, UgyvitelCustomers.class);
     UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
     validatedUgyvitelCustomers.customer = new ArrayList<>();
     UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
     invalidUgyvitelCustomers.customer = new ArrayList<>();
 
-    
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
     
     System.out.println(ugyvitelCustomers.customer.size());
