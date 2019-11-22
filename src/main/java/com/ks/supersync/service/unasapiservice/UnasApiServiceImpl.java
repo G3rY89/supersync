@@ -213,13 +213,9 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     MediaType mediaType = MediaType.parse("application/xml");
 
-    jaxbContext = JAXBContext.newInstance(UnasCustomers.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
-    jaxbMarshaller.marshal(mapUgyvitelOrdersToUnasOrders(ugyvitelOrders), sw);
+    UnasOrders mappedUnasOrders = mapUgyvitelOrdersToUnasOrders(ugyvitelOrders);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasOrders.class, mappedUnasOrders));
 
     Request setOrderRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_ORDERS.toString()).post(body).addHeader("ApiKey", apiKey)
@@ -236,13 +232,9 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     MediaType mediaType = MediaType.parse("application/xml");
 
-    jaxbContext = JAXBContext.newInstance(UnasProducts.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
-    jaxbMarshaller.marshal(mapUgyvitelStocksToUnasStocks(ugyvitelProducts), sw);
+    UnasProducts mappedUnasStocks = mapUgyvitelStocksToUnasStocks(ugyvitelProducts);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasProducts.class, mappedUnasStocks));
 
     Request setStockRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_STOCKS.toString()).post(body).addHeader("ApiKey", apiKey)
@@ -260,13 +252,9 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     MediaType mediaType = MediaType.parse("application/xml");
 
-    jaxbContext = JAXBContext.newInstance(UnasCategories.class);
-    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-    StringWriter sw = new StringWriter();
-    jaxbMarshaller.marshal(mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories), sw);
+    UnasCategories mappedUnasCategories = mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories);
 
-    RequestBody body = RequestBody.create(mediaType, sw.toString());
+    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasCategories.class, mappedUnasCategories));
 
     Request setCategoryRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CATEGORIES.toString()).post(body).addHeader("ApiKey", apiKey)
@@ -276,7 +264,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     return response.body().string();
   }
 
-  private Object mapUgyvitelCategoriesToUnasCategories(final UgyvitelCategories ugyvitelCategories) {
+  private UnasCategories mapUgyvitelCategoriesToUnasCategories(final UgyvitelCategories ugyvitelCategories) {
 
     final UnasCategories unasCategories = new UnasCategories();
 
@@ -296,7 +284,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasCategories;
   }
 
-  private Object mapUgyvitelStocksToUnasStocks(final UgyvitelProducts ugyvitelProducts) {
+  private UnasProducts mapUgyvitelStocksToUnasStocks(final UgyvitelProducts ugyvitelProducts) {
 
     final UnasProducts unasProducts = new UnasProducts();
 
@@ -317,7 +305,7 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasProducts;
   }
 
-  private Object mapUgyvitelOrdersToUnasOrders(final UgyvitelOrders ugyvitelOrders) {
+  private UnasOrders mapUgyvitelOrdersToUnasOrders(final UgyvitelOrders ugyvitelOrders) {
 
     final UnasOrders unasOrders = new UnasOrders();
 
@@ -521,7 +509,7 @@ public class UnasApiServiceImpl implements UnasApiService {
       ugyvitelCustomer.centralCountry = unasCustomer.addresses.invoice.country;
       ugyvitelCustomer.centralZip = unasCustomer.addresses.invoice.ZIP;
       ugyvitelCustomer.centralCity = unasCustomer.addresses.invoice.city;
-      ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.street;
+      ugyvitelCustomer.centralStreet = unasCustomer.addresses.invoice.streetName;
       ugyvitelCustomer.centralPublicDomain = unasCustomer.addresses.invoice.streetType;
       ugyvitelCustomer.centralStaircase = "";
       ugyvitelCustomer.centralDoor = "";
