@@ -1,4 +1,4 @@
-package com.ks.supersync.service.unasapiservice;
+package com.ks.supersync.service.syncservices.unasservice;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -42,6 +42,7 @@ import com.ks.supersync.model.unas.product.Prices;
 import com.ks.supersync.model.unas.product.UnasProduct;
 import com.ks.supersync.model.unas.product.UnasProducts;
 import com.ks.supersync.repository.I18nRepository;
+import com.ks.supersync.service.syncservices.SyncService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ import org.springframework.stereotype.Service;
 import okhttp3.*;
 
 @Service
-public class UnasApiServiceImpl implements UnasApiService {
+public class UnasApiService implements SyncService {
 
   OkHttpClient client = new OkHttpClient();
 
@@ -66,11 +67,11 @@ public class UnasApiServiceImpl implements UnasApiService {
   private StringReader reader;
   private StringWriter writer;
 
-  public UnasApiServiceImpl(final I18nRepository i18nRepository) {
+  public UnasApiService(final I18nRepository i18nRepository) {
     this.i18nRepository = i18nRepository;
   }
 
-  private Object createObjectFromXMLString(String XMLString, Class c) throws JAXBException {
+  private Object createObjectFromXMLString(final String XMLString, final Class c) throws JAXBException {
 
     this.jaxbContext = JAXBContext.newInstance(c);
     this.jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -79,7 +80,7 @@ public class UnasApiServiceImpl implements UnasApiService {
 
   }
 
-  private String createXMLStringFromObject(Class c, Object mappedObject) throws JAXBException {
+  private String createXMLStringFromObject(final Class c, final Object mappedObject) throws JAXBException {
 
     this.jaxbContext = JAXBContext.newInstance(c);
     this.jaxbMarshaller = jaxbContext.createMarshaller();
@@ -91,19 +92,19 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public UgyvitelProducts getUnasProductsToUgyvitel(final String apiKey) throws IOException, JAXBException {
+  public UgyvitelProducts getProductsToUgyvitel(final String apiKey) throws IOException, JAXBException {
 
     UgyvitelProducts uProducts = new UgyvitelProducts();
 
     client.newBuilder().connectTimeout(15, TimeUnit.SECONDS).writeTimeout(15, TimeUnit.SECONDS).readTimeout(15,
         TimeUnit.SECONDS);
 
-    Request request = new Request.Builder()
+    final Request request = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_PRODUCTS.toString() + "?debug=true").get()
         .addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(request).execute();
+    final Response response = client.newCall(request).execute();
 
-    UnasProducts unasProducts = (UnasProducts) createObjectFromXMLString(response.body().string(), UnasProducts.class);
+    final UnasProducts unasProducts = (UnasProducts) createObjectFromXMLString(response.body().string(), UnasProducts.class);
 
     uProducts = mapUnasProductsToUgyvitelProducts(unasProducts, apiKey);
 
@@ -115,12 +116,12 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     UgyvitelCustomers uCustomers = new UgyvitelCustomers();
 
-    Request request = new Request.Builder()
+    final Request request = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_CUSTOMERS.toString()).get().addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(request).execute();
+    final Response response = client.newCall(request).execute();
 
-    UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
+    final UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
 
@@ -132,11 +133,11 @@ public class UnasApiServiceImpl implements UnasApiService {
 
     UgyvitelOrders uOrders = new UgyvitelOrders();
 
-    Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_ORDERS.toString())
+    final Request request = new Request.Builder().url(unasapiServiceUrl + UnasMServiceEndpoints.GET_ORDERS.toString())
         .get().addHeader("ApiKey", apiKey).build();
-    Response response = client.newCall(request).execute();
+    final Response response = client.newCall(request).execute();
 
-    UnasOrders unasOrders = (UnasOrders) createObjectFromXMLString(response.body().string(), UnasOrders.class);
+    final UnasOrders unasOrders = (UnasOrders) createObjectFromXMLString(response.body().string(), UnasOrders.class);
 
     uOrders = mapUnasOrdersToUgyvitelOrders(unasOrders);
 
@@ -144,34 +145,34 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public Object sendUgyvitelProductToUnas(final String apiKey, final String Products)
+  public Object sendUgyvitelProducts(final String apiKey, final String Products)
       throws IOException, JAXBException {
 
-    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) createObjectFromXMLString(Products, UgyvitelProducts.class);
+    final UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) createObjectFromXMLString(Products, UgyvitelProducts.class);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
-    UnasProducts mappedUnasProducts = mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey);
+    final UnasProducts mappedUnasProducts = mapUgyvitelProductsToUnasProducts(ugyvitelProducts, apiKey);
 
-    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasProducts.class, mappedUnasProducts));
+    final RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasProducts.class, mappedUnasProducts));
 
-    Request setProductRequest = new Request.Builder()
+    final Request setProductRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_PRODUCTS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setProductRequest).execute();
+    final Response response = client.newCall(setProductRequest).execute();
 
     return response.body().string();
   }
 
   @Override
-  public Object sendUgyvitelCustomerToUnas(final String apiKey, final String Customers)
+  public Object sendUgyvitelCustomers(final String apiKey, final String Customers)
       throws IOException, JAXBException {
 
-    UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) createObjectFromXMLString(Customers, UgyvitelCustomers.class);
+    final UgyvitelCustomers ugyvitelCustomers = (UgyvitelCustomers) createObjectFromXMLString(Customers, UgyvitelCustomers.class);
 
-    UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
+    final UgyvitelCustomers validatedUgyvitelCustomers = new UgyvitelCustomers();
     validatedUgyvitelCustomers.customer = new ArrayList<>();
-    UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
+    final UgyvitelCustomers invalidUgyvitelCustomers = new UgyvitelCustomers();
     invalidUgyvitelCustomers.customer = new ArrayList<>();
 
     ValidateUgyvitelCustomersToUnas(ugyvitelCustomers, validatedUgyvitelCustomers, invalidUgyvitelCustomers);
@@ -180,21 +181,21 @@ public class UnasApiServiceImpl implements UnasApiService {
       return "No valid customer found for UNAS";
     }
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
-    UnasCustomers mappedUnasCustomers = mapUgyvitelCustomersToUnasCustomers(validatedUgyvitelCustomers);
+    final UnasCustomers mappedUnasCustomers = mapUgyvitelCustomersToUnasCustomers(validatedUgyvitelCustomers);
     
-    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasCustomers.class, mappedUnasCustomers));
+    final RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasCustomers.class, mappedUnasCustomers));
 
-    Request setCustomerRequest = new Request.Builder()
+    final Request setCustomerRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CUSTOMERS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response responseFromUnas = client.newCall(setCustomerRequest).execute();
+    final Response responseFromUnas = client.newCall(setCustomerRequest).execute();
 
-    UnasCustomers responseToUgyvitel = (UnasCustomers) createObjectFromXMLString(responseFromUnas.body().string(), UnasCustomers.class);
+    final UnasCustomers responseToUgyvitel = (UnasCustomers) createObjectFromXMLString(responseFromUnas.body().string(), UnasCustomers.class);
 
-    for (UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
-      UnasCustomer invalidCustomer = new UnasCustomer();
+    for (final UgyvitelCustomer ugyvCustomer : invalidUgyvitelCustomers.customer) {
+      final UnasCustomer invalidCustomer = new UnasCustomer();
       invalidCustomer.email = ugyvCustomer.email;
       invalidCustomer.status = "error";
       responseToUgyvitel.customer.add(invalidCustomer);
@@ -203,59 +204,59 @@ public class UnasApiServiceImpl implements UnasApiService {
   }
 
   @Override
-  public Object sendUgyvitelOrderToUnas(final String apiKey, final String Orders) throws IOException, JAXBException {
+  public Object sendUgyvitelOrders(final String apiKey, final String Orders) throws IOException, JAXBException {
 
-    UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) createObjectFromXMLString(Orders, UgyvitelOrders.class);
+    final UgyvitelOrders ugyvitelOrders = (UgyvitelOrders) createObjectFromXMLString(Orders, UgyvitelOrders.class);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
-    UnasOrders mappedUnasOrders = mapUgyvitelOrdersToUnasOrders(ugyvitelOrders);
+    final UnasOrders mappedUnasOrders = mapUgyvitelOrdersToUnasOrders(ugyvitelOrders);
 
-    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasOrders.class, mappedUnasOrders));
+    final RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasOrders.class, mappedUnasOrders));
 
-    Request setOrderRequest = new Request.Builder()
+    final Request setOrderRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_ORDERS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setOrderRequest).execute();
+    final Response response = client.newCall(setOrderRequest).execute();
 
     return response.body().string();
   }
 
   @Override
-  public Object sendUgyvitelStockToUnas(final String apiKey, final String Products) throws IOException, JAXBException {
+  public Object sendUgyvitelStocks(final String apiKey, final String Products) throws IOException, JAXBException {
 
-    UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) createObjectFromXMLString(Products, UgyvitelProducts.class);
+    final UgyvitelProducts ugyvitelProducts = (UgyvitelProducts) createObjectFromXMLString(Products, UgyvitelProducts.class);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
-    UnasProducts mappedUnasStocks = mapUgyvitelStocksToUnasStocks(ugyvitelProducts);
+    final UnasProducts mappedUnasStocks = mapUgyvitelStocksToUnasStocks(ugyvitelProducts);
 
-    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasProducts.class, mappedUnasStocks));
+    final RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasProducts.class, mappedUnasStocks));
 
-    Request setStockRequest = new Request.Builder()
+    final Request setStockRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_STOCKS.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setStockRequest).execute();
+    final Response response = client.newCall(setStockRequest).execute();
 
     return response.body().string();
   }
   
   @Override
-  public Object sendUgyvitelProductCategoryToUnas(final String apiKey, final String Categories)
+  public Object sendUgyvitelProductCategories(final String apiKey, final String Categories)
       throws IOException, JAXBException {
 
-    UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) createObjectFromXMLString(Categories, UgyvitelCategories.class);
+    final UgyvitelCategories ugyvitelCategories = (UgyvitelCategories) createObjectFromXMLString(Categories, UgyvitelCategories.class);
 
-    MediaType mediaType = MediaType.parse("application/xml");
+    final MediaType mediaType = MediaType.parse("application/xml");
 
-    UnasCategories mappedUnasCategories = mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories);
+    final UnasCategories mappedUnasCategories = mapUgyvitelCategoriesToUnasCategories(ugyvitelCategories);
 
-    RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasCategories.class, mappedUnasCategories));
+    final RequestBody body = RequestBody.create(mediaType, createXMLStringFromObject(UnasCategories.class, mappedUnasCategories));
 
-    Request setCategoryRequest = new Request.Builder()
+    final Request setCategoryRequest = new Request.Builder()
         .url(unasapiServiceUrl + UnasMServiceEndpoints.SET_CATEGORIES.toString()).post(body).addHeader("ApiKey", apiKey)
         .build();
-    Response response = client.newCall(setCategoryRequest).execute();
+    final Response response = client.newCall(setCategoryRequest).execute();
 
     return response.body().string();
   }
@@ -385,7 +386,6 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasOrders;
   }
 
-  @Override
   public UnasCustomers mapUgyvitelCustomersToUnasCustomers(final UgyvitelCustomers ugyvitelCustomers) {
     final UnasCustomers unasCustomers = new UnasCustomers();
 
@@ -729,9 +729,8 @@ public class UnasApiServiceImpl implements UnasApiService {
     return unasProducts;
   }
 
-  @Override
-  public void ValidateUgyvitelCustomersToUnas(UgyvitelCustomers ugyvitelCustomers, UgyvitelCustomers validatedUgyvitelCustomers, UgyvitelCustomers invalidUgyvitelCustomers){
-    for (UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
+  public void ValidateUgyvitelCustomersToUnas(final UgyvitelCustomers ugyvitelCustomers, final UgyvitelCustomers validatedUgyvitelCustomers, final UgyvitelCustomers invalidUgyvitelCustomers){
+    for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
       if(!ugyvitelCustomer.countryCode.equals("HU") 
       || ugyvitelCustomer.email.equals("") 
       || ugyvitelCustomer.centralAddressName.equals("") 

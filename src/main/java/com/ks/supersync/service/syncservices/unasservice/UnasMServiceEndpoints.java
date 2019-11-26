@@ -1,4 +1,4 @@
-package com.ks.supersync.service.unasapiservice;
+package com.ks.supersync.service.syncservices.unasservice;
 
 public enum UnasMServiceEndpoints {
 

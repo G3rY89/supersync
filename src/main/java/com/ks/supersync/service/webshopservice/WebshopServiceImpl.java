@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBException;
 
 import com.ks.supersync.model.supersync.SuperSyncWebshops;
 import com.ks.supersync.repository.SuperSyncUserRepository;
-import com.ks.supersync.service.unasapiservice.UnasApiService;
+import com.ks.supersync.service.syncservices.SyncService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class WebshopServiceImpl implements WebshopService {
     private SuperSyncUserRepository superSyncUserRepository;
 
     @Autowired
-    UnasApiService unasApiService;
+    SyncService unasApiService;
 
     public WebshopServiceImpl(SuperSyncUserRepository service){
         this.superSyncUserRepository = service;
@@ -34,7 +34,7 @@ public class WebshopServiceImpl implements WebshopService {
             case "UNAS":
                 switch (syncType) {
                 case "PRODUCT":
-                    return unasApiService.getUnasProductsToUgyvitel(uWebshops.webshopApiKey);
+                    return unasApiService.getProductsToUgyvitel(uWebshops.webshopApiKey);
 
                 case "CUSTOMER":
                     return unasApiService.getCustomersToUgyvitel(uWebshops.webshopApiKey);
@@ -59,19 +59,19 @@ public class WebshopServiceImpl implements WebshopService {
                     case "UNAS":
                     switch(syncType){
                         case "PRODUCT":
-                        return unasApiService.sendUgyvitelProductToUnas(uWebshops.webshopApiKey, Item);
+                        return unasApiService.sendUgyvitelProducts(uWebshops.webshopApiKey, Item);
 
                         case "CUSTOMER":
-                        return unasApiService.sendUgyvitelCustomerToUnas(uWebshops.webshopApiKey, Item);
+                        return unasApiService.sendUgyvitelCustomers(uWebshops.webshopApiKey, Item);
 
                         case "ORDER":
-                        return unasApiService.sendUgyvitelOrderToUnas(uWebshops.webshopApiKey, Item);
+                        return unasApiService.sendUgyvitelOrders(uWebshops.webshopApiKey, Item);
 
                         case "STOCK":
-                        return unasApiService.sendUgyvitelStockToUnas(uWebshops.webshopApiKey, Item);
+                        return unasApiService.sendUgyvitelStocks(uWebshops.webshopApiKey, Item);
 
                         case "PRODUCT_CATEGORY":
-                        return unasApiService.sendUgyvitelProductCategoryToUnas(uWebshops.webshopApiKey, Item);
+                        return unasApiService.sendUgyvitelProductCategories(uWebshops.webshopApiKey, Item);
                     }
                 }
             }

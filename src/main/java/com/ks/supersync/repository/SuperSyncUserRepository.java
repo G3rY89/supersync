@@ -12,6 +12,7 @@ public interface SuperSyncUserRepository extends JpaRepository<SuperSyncWebshops
     
     @Transactional
     SuperSyncWebshops findByWebIdentifierAndWebPasswordAndWebshopApiKey(String WebIdentifier, String WebPassword, String ApiKey);
+    
     List<SuperSyncWebshops> findByWebIdentifier(String webIdentifier);
     
 }
