@@ -270,8 +270,8 @@ public class UnasApiService implements SyncService {
 
       unasCategory.id = ugyvitelCategory.id;
       unasCategory.name = ugyvitelCategory.name;
-      unasCategory.display.menu = ugyvitelCategory.visible.equals("1") ? "yes" : "no";
-      unasCategory.display.page = ugyvitelCategory.visible.equals("1") ? "yes" : "no";
+     /*  unasCategory.display.menu = ugyvitelCategory.visible.equals("1") ? "yes" : "no";
+      unasCategory.display.page = ugyvitelCategory.visible.equals("1") ? "yes" : "no"; */
       unasCategory.parent.tree = ugyvitelCategory.tree;
       unasCategory.order = ugyvitelCategory.categoryOrder;
 
