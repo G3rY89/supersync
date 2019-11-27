@@ -433,6 +433,14 @@ public class UnasApiService implements SyncService {
           unasCustomer.addresses.shipping.streetType = ugyvitelCustomer.deliveryPublicDomain;
           unasCustomer.addresses.shipping.streetNumber = ugyvitelCustomer.deliveryNumber;
         }
+
+        if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category != null){
+          for (com.ks.supersync.model.ugyvitel.customer.Category category : ugyvitelCustomer.categories.category) {
+            unasCustomer.group.name = category.categoryValue;
+            continue; 
+          }
+        }
+
         unasCustomers.customer.add(unasCustomer);    
     }
     return unasCustomers;

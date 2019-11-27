@@ -13,7 +13,7 @@ public class Category {
 
     public Category(String categroryId, String CategoryValue){
         this.categoryId = categroryId;
-        this.categoryValue =CategoryValue;
+        this.categoryValue = CategoryValue;
     }
 
     public Category(){
