@@ -703,7 +703,7 @@ public class UnasApiService implements SyncService {
         if (ugyvitelProduct.priceRules.priceRule != null) {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
             if (pRule.priceRuleName.equals("normal")) {
-              unitPrice.gross = String.valueOf(Integer.parseInt(pRule.price) * Integer.parseInt(ugyvitelProduct.vatRate));
+              unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate));
               unitPrice.net = pRule.price;
               continue;
             } else {
@@ -713,14 +713,14 @@ public class UnasApiService implements SyncService {
                     unasPrices.saleStart = pRule.validFrom;
                     unasPrices.saleEnd = pRule.validTo;
                     unasPrices.net = pRule.price;
-                    unasPrices.gross = String.valueOf(Integer.parseInt(pRule.price) * Integer.parseInt(ugyvitelProduct.vatRate));
+                    unasPrices.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate));
                   }
                 }
               } else {
                 final Price unasPrice = new Price();
                 unasPrice.type = "other"; // felülvizsgálni
                 unasPrice.net = pRule.price; // felülvizsgálni
-                unasPrice.gross = String.valueOf(Integer.parseInt(pRule.price) * Integer.parseInt(ugyvitelProduct.vatRate)); // kötelező mező
+                unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate)); // kötelező mező
                 unasPrice.start = pRule.validFrom; // felülvizsgálni
                 unasPrice.end = pRule.validTo; // felülvizsgálni
                 unasProduct.Prices.prices.add(unasPrice);
