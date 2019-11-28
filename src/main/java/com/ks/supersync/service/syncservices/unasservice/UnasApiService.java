@@ -734,6 +734,7 @@ public class UnasApiService implements SyncService {
       for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
         final Category unasCategory = new Category();
         unasCategory.id = ugyvitelCatergoy.categoryId;
+        unasCategory.name = ugyvitelCatergoy.categoryValue;
         unasProduct.categories.category.add(unasCategory);
       }
       unasProducts.products.add(unasProduct);
