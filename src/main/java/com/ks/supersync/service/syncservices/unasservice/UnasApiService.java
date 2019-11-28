@@ -436,7 +436,11 @@ public class UnasApiService implements SyncService {
 
         if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category != null){
           for (com.ks.supersync.model.ugyvitel.customer.Category category : ugyvitelCustomer.categories.category) {
-            unasCustomer.group.name = category.categoryValue;
+            if(category.isBaseCategory.equals("false")){
+              unasCustomer.group.name = category.categoryValue;
+            } else {
+              continue;  
+            }
             continue; 
           }
         }
@@ -689,34 +693,34 @@ public class UnasApiService implements SyncService {
       }
       unasProduct.description.longDesc = "";
       unitPrice.type = "normal";
-      unitPrice.net = ugyvitelProduct.unitPrice;
-      // unitPrice.gross = "0";
       unasProduct.Prices.prices.add(unitPrice);
       final Price unasSalePrice = new Price();
-      unasSalePrice.type = "sale";
+      /* unasSalePrice.type = "sale";
       unasSalePrice.net = ugyvitelProduct.discountPrice;
       unasSalePrice.gross = "13654";
-      unasProduct.Prices.prices.add(unasSalePrice);
+      unasProduct.Prices.prices.add(unasSalePrice); */
       if (ugyvitelProduct.priceRules != null) {
         if (ugyvitelProduct.priceRules.priceRule != null) {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
-            if (pRule.priceRuleName.equals("Egységár")) {
+            if (pRule.priceRuleName.equals("normal")) {
+              unitPrice.gross = String.valueOf(Integer.parseInt(pRule.price) * Integer.parseInt(ugyvitelProduct.vatRate));
+              unitPrice.net = pRule.price;
               continue;
             } else {
               if (pRule.price.equals(ugyvitelProduct.discountPrice)) {
                 for (final Price unasPrices : unasProduct.Prices.prices) {
-                  if (unasPrices.type.equals("sale")) {
+                  if (unasPrices.type.equals("discount")) {
                     unasPrices.saleStart = pRule.validFrom;
                     unasPrices.saleEnd = pRule.validTo;
-                    unasPrices.net = ugyvitelProduct.discountPrice;
-                    unasPrices.gross = "315";
+                    unasPrices.net = pRule.price;
+                    unasPrices.gross = String.valueOf(Integer.parseInt(pRule.price) * Integer.parseInt(ugyvitelProduct.vatRate));
                   }
                 }
               } else {
                 final Price unasPrice = new Price();
-                unasPrice.type = "special"; // felülvizsgálni
+                unasPrice.type = "other"; // felülvizsgálni
                 unasPrice.net = pRule.price; // felülvizsgálni
-                unasPrice.gross = "345"; // kötelező mező
+                unasPrice.gross = String.valueOf(Integer.parseInt(pRule.price) * Integer.parseInt(ugyvitelProduct.vatRate)); // kötelező mező
                 unasPrice.start = pRule.validFrom; // felülvizsgálni
                 unasPrice.end = pRule.validTo; // felülvizsgálni
                 unasProduct.Prices.prices.add(unasPrice);
