@@ -477,18 +477,12 @@ public class UnasApiService implements SyncService {
           && unasProduct.stocks.status != null ? unasProduct.stocks.status.active : 0;
       if (unasProduct.Prices != null) {
         for (final Price price : unasProduct.Prices.prices) {
-          if (price.type.equals("normal")) {
-            ugyvitelProduct.unitPrice = price.net != null ? price.net : "";
-          } else {
             final PriceRule priceRule = new PriceRule();
-            priceRule.priceRuleId = "";
+            priceRule.priceRuleType = price.type;
             priceRule.validFrom = price.saleStart;
             priceRule.validTo = price.saleEnd;
-            priceRule.priceRuleName = price.type;
-            priceRule.currency = "";
             priceRule.price = price.net;
             ugyvitelProduct.priceRules.priceRule.add(priceRule);
-          }
         }
       } else {
         ugyvitelProduct.unitPrice = "";

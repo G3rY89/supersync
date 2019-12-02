@@ -6,6 +6,8 @@ public class PriceRule {
 
     @XmlElement(name = "PriceRuleId")
     public String priceRuleId;
+    @XmlElement(name = "PriceRuleType")
+    public String priceRuleType;
     @XmlElement(name = "ValidFrom")
     public String validFrom;
     @XmlElement(name = "ValidTo")
