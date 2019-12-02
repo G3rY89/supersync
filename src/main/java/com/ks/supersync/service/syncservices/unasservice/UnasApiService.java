@@ -669,6 +669,7 @@ public class UnasApiService implements SyncService {
       unasProduct.description = new Description();
       final Price unitPrice = new Price();
 
+      unasProduct.id = ugyvitelProduct.productId;
       unasProduct.sku = ugyvitelProduct.productCode;
       for (final TranslatedName tName : ugyvitelProduct.productName.tName) {
         if (tName.languageId.equals(webshopI18n.language)) {
@@ -725,7 +726,7 @@ public class UnasApiService implements SyncService {
       } else {
         unasProduct.Prices.prices.add(unitPrice);
       }
-      /* if(ugyvitelProduct.categories != null && ugyvitelProduct.categories.category != null){
+      if(ugyvitelProduct.categories != null && ugyvitelProduct.categories.category != null){
         for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
           final Category unasCategory = new Category();
           unasCategory.id = ugyvitelCatergoy.categoryId;
@@ -734,7 +735,7 @@ public class UnasApiService implements SyncService {
           unasProduct.categories.category.add(unasCategory);
         }
         unasProducts.products.add(unasProduct);
-      } */
+      }
     }
     return unasProducts;
   }
