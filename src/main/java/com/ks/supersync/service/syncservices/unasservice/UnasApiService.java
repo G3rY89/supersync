@@ -725,14 +725,16 @@ public class UnasApiService implements SyncService {
       } else {
         unasProduct.Prices.prices.add(unitPrice);
       }
-      for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
-        final Category unasCategory = new Category();
-        unasCategory.id = ugyvitelCatergoy.categoryId;
-        unasCategory.name = ugyvitelCatergoy.categoryValue;
-        unasCategory.type = "alt";
-        unasProduct.categories.category.add(unasCategory);
+      if(ugyvitelProduct.categories != null){
+        for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
+          final Category unasCategory = new Category();
+          unasCategory.id = ugyvitelCatergoy.categoryId;
+          unasCategory.name = ugyvitelCatergoy.categoryValue;
+          unasCategory.type = "alt";
+          unasProduct.categories.category.add(unasCategory);
+        }
+        unasProducts.products.add(unasProduct);
       }
-      unasProducts.products.add(unasProduct);
     }
     return unasProducts;
   }
