@@ -725,7 +725,7 @@ public class UnasApiService implements SyncService {
       } else {
         unasProduct.Prices.prices.add(unitPrice);
       }
-      if(ugyvitelProduct.categories != null && ugyvitelProduct.categories.category != null){
+      /* if(ugyvitelProduct.categories != null && ugyvitelProduct.categories.category != null){
         for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
           final Category unasCategory = new Category();
           unasCategory.id = ugyvitelCatergoy.categoryId;
@@ -734,7 +734,7 @@ public class UnasApiService implements SyncService {
           unasProduct.categories.category.add(unasCategory);
         }
         unasProducts.products.add(unasProduct);
-      }
+      } */
     }
     return unasProducts;
   }
