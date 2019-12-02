@@ -669,7 +669,7 @@ public class UnasApiService implements SyncService {
       unasProduct.description = new Description();
       final Price unitPrice = new Price();
 
-      unasProduct.id = ugyvitelProduct.productId;
+      unasProduct.id = ugyvitelProduct.webshopId;
       unasProduct.sku = ugyvitelProduct.productCode;
       for (final TranslatedName tName : ugyvitelProduct.productName.tName) {
         if (tName.languageId.equals(webshopI18n.language)) {
