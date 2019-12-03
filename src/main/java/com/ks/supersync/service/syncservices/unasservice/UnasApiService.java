@@ -732,7 +732,7 @@ public class UnasApiService implements SyncService {
       } else {
         final Category unasCategory = new Category();
         unasCategory.name = "Kategorizálatlan";
-        unasCategory.type = "Base";
+        unasCategory.type = "base";
         unasProduct.categories.category.add(unasCategory);
       }
       unasProducts.products.add(unasProduct);
