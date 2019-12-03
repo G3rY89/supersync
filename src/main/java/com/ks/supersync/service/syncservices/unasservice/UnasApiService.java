@@ -521,7 +521,7 @@ public class UnasApiService implements SyncService {
       ugyvitelCustomer.deliveryAddressName = unasCustomer.addresses.shipping.name;
       ugyvitelCustomer.deliveryCountry = unasCustomer.addresses.shipping.country;
       ugyvitelCustomer.deliveryCity = unasCustomer.addresses.shipping.city;
-      ugyvitelCustomer.deliveryStreet = unasCustomer.addresses.shipping.street;
+      ugyvitelCustomer.deliveryStreet = unasCustomer.addresses.shipping.streetName;
       ugyvitelCustomer.deliveryZip = unasCustomer.addresses.shipping.ZIP;
       ugyvitelCustomer.deliveryPublicDomain = unasCustomer.addresses.shipping.streetType;
       ugyvitelCustomer.deliveryStaircase = "";
