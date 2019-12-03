@@ -692,7 +692,7 @@ public class UnasApiService implements SyncService {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
             if (pRule.priceRuleType.equals("normal")) {
               unitPrice.type = "normal";
-              unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
+              unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * (Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")) / 100 + 1));
               unitPrice.saleStart = pRule.validFrom;
               unitPrice.saleEnd = pRule.validTo;
               unitPrice.net = pRule.price;
@@ -704,7 +704,7 @@ public class UnasApiService implements SyncService {
               unasPrice.saleStart = pRule.validFrom;
               unasPrice.saleEnd = pRule.validTo;
               unasPrice.net = pRule.price;
-              unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
+              unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * (Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))/ 100 + 1));
               unasProduct.Prices.prices.add(unasPrice);
               continue;
             } else {
@@ -713,7 +713,7 @@ public class UnasApiService implements SyncService {
                 unasPrice.groupName = "funny";
                 unasPrice.group = "6868";
                 unasPrice.net = pRule.price; // felülvizsgálni
-                unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))); // kötelező mező
+                unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * (Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))/ 100 + 1)); // kötelező mező
                 unasPrice.start = pRule.validFrom; // felülvizsgálni
                 unasPrice.end = pRule.validTo; // felülvizsgálni
                 unasProduct.Prices.prices.add(unasPrice);
