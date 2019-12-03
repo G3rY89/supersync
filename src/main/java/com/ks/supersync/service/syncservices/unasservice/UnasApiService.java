@@ -687,31 +687,24 @@ public class UnasApiService implements SyncService {
         }
       }
       unasProduct.description.longDesc = "";
-      final Price unasSalePrice = new Price();
-      /* unasSalePrice.type = "sale";
-      unasSalePrice.net = ugyvitelProduct.discountPrice;
-      unasSalePrice.gross = "13654";
-      unasProduct.Prices.prices.add(unasSalePrice); */
       if (ugyvitelProduct.priceRules != null) {
         if (ugyvitelProduct.priceRules.priceRule != null) {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
-            if (pRule.priceRuleName.equals("normal")) {
+            if (pRule.priceRuleType.equals("normal")) {
               unitPrice.type = "normal";
               unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
               unitPrice.net = pRule.price;
               unasProduct.Prices.prices.add(unitPrice);
               continue;
+            } else if (pRule.priceRuleType.equals("discount")) {
+              final Price unasPrice = new Price();
+              unasPrice.type = "normal";
+              unasPrice.saleStart = pRule.validFrom;
+              unasPrice.saleEnd = pRule.validTo;
+              unasPrice.net = pRule.price;
+              unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
+              unasProduct.Prices.prices.add(unasPrice);
             } else {
-              if (pRule.price.equals(ugyvitelProduct.discountPrice)) {
-                for (final Price unasPrices : unasProduct.Prices.prices) {
-                  if (unasPrices.type.equals("discount")) {
-                    unasPrices.saleStart = pRule.validFrom;
-                    unasPrices.saleEnd = pRule.validTo;
-                    unasPrices.net = pRule.price;
-                    unasPrices.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
-                  }
-                }
-              } else {
                 final Price unasPrice = new Price();
                 unasPrice.type = "other"; // felülvizsgálni
                 unasPrice.net = pRule.price; // felülvizsgálni
@@ -722,7 +715,6 @@ public class UnasApiService implements SyncService {
               }
             }
           }
-        }
       } else {
         unasProduct.Prices.prices.add(unitPrice);
       }
