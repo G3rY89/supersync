@@ -25,7 +25,7 @@ public class UgyvitelProduct {
     public Integer active;
     @XmlElement(name = "VatCode")
     public String vatCode;
-    @XmlElement(name = "QuantityUnit")
+    @XmlElement(name = "QuantityUnits")
     public QuantityUnit quantityUnit;
     @XmlElement(name = "Service")
     public Integer service;
