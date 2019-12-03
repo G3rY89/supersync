@@ -727,7 +727,7 @@ public class UnasApiService implements SyncService {
           final Category unasCategory = new Category();
           unasCategory.id = ugyvitelCatergoy.categoryId;
           unasCategory.name = ugyvitelCatergoy.categoryValue;
-          unasCategory.type = "alt";
+          unasCategory.type = ugyvitelCatergoy.categoryType;
           unasProduct.categories.category.add(unasCategory);
         }
         unasProducts.products.add(unasProduct);

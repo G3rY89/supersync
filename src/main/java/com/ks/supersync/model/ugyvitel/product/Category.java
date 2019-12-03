@@ -8,4 +8,6 @@ public class Category {
     public String categoryValue;
     @XmlAttribute(name = "CategoryId")
     public String categoryId;
+    @XmlAttribute(name = "CategoryType")
+    public String categoryType;
 }
