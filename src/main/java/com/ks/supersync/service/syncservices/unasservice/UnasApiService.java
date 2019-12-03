@@ -729,6 +729,10 @@ public class UnasApiService implements SyncService {
           unasCategory.type = ugyvitelCatergoy.categoryType;
           unasProduct.categories.category.add(unasCategory);
         }
+      } else {
+        final Category unasCategory = new Category();
+        unasCategory.name = "Kategorizálatlan";
+        unasProduct.categories.category.add(unasCategory);
       }
       unasProducts.products.add(unasProduct);
     }
