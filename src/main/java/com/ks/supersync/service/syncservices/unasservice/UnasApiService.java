@@ -687,8 +687,6 @@ public class UnasApiService implements SyncService {
         }
       }
       unasProduct.description.longDesc = "";
-      unitPrice.type = "normal";
-      unasProduct.Prices.prices.add(unitPrice);
       final Price unasSalePrice = new Price();
       /* unasSalePrice.type = "sale";
       unasSalePrice.net = ugyvitelProduct.discountPrice;
@@ -698,11 +696,10 @@ public class UnasApiService implements SyncService {
         if (ugyvitelProduct.priceRules.priceRule != null) {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
             if (pRule.priceRuleName.equals("normal")) {
-              System.out.println(pRule.price + " " + ugyvitelProduct.vatRate);
+              unitPrice.type = "normal";
+              unasProduct.Prices.prices.add(unitPrice);
               unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
-              System.out.println("Unitprice: " + unitPrice.gross);
               unitPrice.net = pRule.price;
-              System.out.println();
               continue;
             } else {
               if (pRule.price.equals(ugyvitelProduct.discountPrice)) {
