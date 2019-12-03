@@ -697,9 +697,9 @@ public class UnasApiService implements SyncService {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
             if (pRule.priceRuleName.equals("normal")) {
               unitPrice.type = "normal";
-              unasProduct.Prices.prices.add(unitPrice);
               unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
               unitPrice.net = pRule.price;
+              unasProduct.Prices.prices.add(unitPrice);
               continue;
             } else {
               if (pRule.price.equals(ugyvitelProduct.discountPrice)) {
