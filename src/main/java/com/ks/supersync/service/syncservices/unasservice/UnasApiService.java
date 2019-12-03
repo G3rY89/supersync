@@ -693,25 +693,29 @@ public class UnasApiService implements SyncService {
             if (pRule.priceRuleType.equals("normal")) {
               unitPrice.type = "normal";
               unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
+              unitPrice.saleStart = pRule.validFrom;
+              unitPrice.saleEnd = pRule.validTo;
               unitPrice.net = pRule.price;
               unasProduct.Prices.prices.add(unitPrice);
               continue;
             } else if (pRule.priceRuleType.equals("discount")) {
               final Price unasPrice = new Price();
-              unasPrice.type = "normal";
+              unasPrice.type = "sale";
               unasPrice.saleStart = pRule.validFrom;
               unasPrice.saleEnd = pRule.validTo;
               unasPrice.net = pRule.price;
               unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
               unasProduct.Prices.prices.add(unasPrice);
+              continue;
             } else {
                 final Price unasPrice = new Price();
-                unasPrice.type = "other"; // felülvizsgálni
+                unasPrice.type = "special"; // felülvizsgálni
                 unasPrice.net = pRule.price; // felülvizsgálni
                 unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))); // kötelező mező
                 unasPrice.start = pRule.validFrom; // felülvizsgálni
                 unasPrice.end = pRule.validTo; // felülvizsgálni
                 unasProduct.Prices.prices.add(unasPrice);
+                continue;
               }
             }
           }
