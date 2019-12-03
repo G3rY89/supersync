@@ -670,10 +670,7 @@ public class UnasApiService implements SyncService {
       unasProduct.description = new Description();
       final Price unitPrice = new Price();
 
-      unasProduct.id = ugyvitelProduct.webshopId;
-      System.out.println(unasProduct.id);
       unasProduct.sku = ugyvitelProduct.productCode;
-      System.out.println(unasProduct.sku);
       for (final TranslatedName tName : ugyvitelProduct.productName.tName) {
         if (tName.languageId.equals(webshopI18n.language)) {
           unasProduct.name = tName.name;
@@ -701,8 +698,11 @@ public class UnasApiService implements SyncService {
         if (ugyvitelProduct.priceRules.priceRule != null) {
           for (final PriceRule pRule : ugyvitelProduct.priceRules.priceRule) {
             if (pRule.priceRuleName.equals("normal")) {
+              System.out.println(pRule.price + " " + ugyvitelProduct.vatRate);
               unitPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", ".")));
+              System.out.println("Unitprice: " + unitPrice.gross);
               unitPrice.net = pRule.price;
+              System.out.println();
               continue;
             } else {
               if (pRule.price.equals(ugyvitelProduct.discountPrice)) {
