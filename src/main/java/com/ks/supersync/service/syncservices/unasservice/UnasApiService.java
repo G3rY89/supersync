@@ -710,7 +710,7 @@ public class UnasApiService implements SyncService {
             } else {
                 final Price unasPrice = new Price();
                 unasPrice.type = "special"; // felülvizsgálni
-                unasPrice.groupName = "Törzsvásárló2";
+                unasPrice.groupName = "funny";
                 unasPrice.net = pRule.price; // felülvizsgálni
                 unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))); // kötelező mező
                 unasPrice.start = pRule.validFrom; // felülvizsgálni
