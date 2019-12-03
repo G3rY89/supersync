@@ -8,8 +8,8 @@ public class Category {
     public String categoryId;
     @XmlElement(name = "CategoryValue")
     public String categoryValue;
-    @XmlElement(name = "IsBaseCategory")
-    public String isBaseCategory;
+    @XmlElement(name = "CategoryType")
+    public String categoryType;
 
     public Category(String categroryId, String CategoryValue){
         this.categoryId = categroryId;

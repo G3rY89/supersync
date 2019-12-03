@@ -437,7 +437,7 @@ public class UnasApiService implements SyncService {
 
         if(ugyvitelCustomer.categories != null && ugyvitelCustomer.categories.category != null){
           for (com.ks.supersync.model.ugyvitel.customer.Category category : ugyvitelCustomer.categories.category) {
-            if(category.isBaseCategory.equals("false")){
+            if(category.categoryType.equals("alt")){
               unasCustomer.group.name = category.categoryValue;
             } else {
               continue;  
@@ -445,8 +445,7 @@ public class UnasApiService implements SyncService {
             continue; 
           }
         }
-
-        unasCustomers.customer.add(unasCustomer);    
+      unasCustomers.customer.add(unasCustomer);    
     }
     return unasCustomers;
   }
