@@ -710,6 +710,7 @@ public class UnasApiService implements SyncService {
             } else {
                 final Price unasPrice = new Price();
                 unasPrice.type = "special"; // felülvizsgálni
+                unasPrice.groupName = "Törzsvásárló2";
                 unasPrice.net = pRule.price; // felülvizsgálni
                 unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))); // kötelező mező
                 unasPrice.start = pRule.validFrom; // felülvizsgálni
@@ -719,8 +720,6 @@ public class UnasApiService implements SyncService {
               }
             }
           }
-      } else {
-        unasProduct.Prices.prices.add(unitPrice);
       }
       if(ugyvitelProduct.categories != null && ugyvitelProduct.categories.category != null){
         for (final com.ks.supersync.model.ugyvitel.product.Category ugyvitelCatergoy : ugyvitelProduct.categories.category) {
