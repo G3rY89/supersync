@@ -121,10 +121,10 @@ public class UnasApiService implements SyncService {
         .url(unasapiServiceUrl + UnasMServiceEndpoints.GET_CUSTOMERS.toString()).get().addHeader("ApiKey", apiKey)
         .build();
     final Response response = client.newCall(request).execute();
+    
+    System.out.println(response.body().string());
 
     final UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
-
-    System.out.println(response.body().string());
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
 
