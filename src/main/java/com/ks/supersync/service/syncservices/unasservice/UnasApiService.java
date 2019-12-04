@@ -536,24 +536,6 @@ public class UnasApiService implements SyncService {
             .add(new com.ks.supersync.model.ugyvitel.customer.Category(unasCustomer.group.id, unasCustomer.group.name));
 
       }
-
-      /*
-       * if(ugyvitelCustomer.otherAddresses != null &&
-       * ugyvitelCustomer.otherAddresses.otherAddress != null){ for (OtherAddress
-       * ugyvitelOtherAddress : ugyvitelCustomer.otherAddresses.otherAddress) { Other
-       * unasOtherAddress = new Other();
-       * 
-       * unasOtherAddress.ZIP = ugyvitelOtherAddress.otherZip; unasOtherAddress.city =
-       * ugyvitelOtherAddress.otherCity; unasOtherAddress.country =
-       * ugyvitelOtherAddress.otherCountry; unasOtherAddress.name =
-       * ugyvitelOtherAddress.otherAddressName; unasOtherAddress.streetName =
-       * ugyvitelOtherAddress.otherStreet; unasOtherAddress.streetType =
-       * ugyvitelOtherAddress.otherPublicDomain; unasOtherAddress.streetNumber =
-       * ugyvitelOtherAddress.otherNumber;
-       * 
-       * unasCustomer.addresses.others.add(unasOtherAddress); } }
-       */
-
       ugyvitelCustomers.customer.add(ugyvitelCustomer);
     }
 
@@ -706,18 +688,18 @@ public class UnasApiService implements SyncService {
               unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * (Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))/ 100 + 1));
               unasProduct.Prices.prices.add(unasPrice);
               continue;
-            } else {
+            } /* else {
                 final Price unasPrice = new Price();
-                unasPrice.type = "special"; // felülvizsgálni
+                unasPrice.type = "special"; 
                 unasPrice.groupName = "funny";
                 unasPrice.group = "6868";
-                unasPrice.net = pRule.price; // felülvizsgálni
+                unasPrice.net = pRule.price; 
                 unasPrice.gross = String.valueOf(Double.parseDouble(pRule.price) * (Double.parseDouble(ugyvitelProduct.vatRate.replaceAll(",", "."))/ 100 + 1)); // kötelező mező
-                unasPrice.start = pRule.validFrom; // felülvizsgálni
-                unasPrice.end = pRule.validTo; // felülvizsgálni
+                unasPrice.start = pRule.validFrom; 
+                unasPrice.end = pRule.validTo; 
                 unasProduct.Prices.prices.add(unasPrice);
                 continue;
-              }
+              } */
             }
           }
       }
@@ -748,7 +730,7 @@ public class UnasApiService implements SyncService {
       || ugyvitelCustomer.centralZip.length() < 4 
       || ugyvitelCustomer.phone.length() < 6
       || ugyvitelCustomer.phone.equals("")
-      || ugyvitelCustomer.taxNumber.length() != 11){
+      || ugyvitelCustomer.taxNumber != null && ugyvitelCustomer.taxNumber.length() != 11){
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
