@@ -7,7 +7,7 @@ public class Stock {
     @XmlElement(name = "Status")
     public Status status;
     @XmlElement(name = "Qty")
-    public Integer qty;
+    public Float qty;
     @XmlElement(name = "Price")
     public String price;
 

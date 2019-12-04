@@ -13,7 +13,7 @@ public class Stock {
     @XmlElement(name = "ReservedStock")
     public String reservedStock;
     @XmlElement(name = "FreeStock")
-    public Integer freeStock;
+    public Float freeStock;
     @XmlElement(name = "IncommingQuantity")
     public String incommingQuantity;
     @XmlElement(name = "IncommingStockDate")
