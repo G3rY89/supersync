@@ -124,6 +124,8 @@ public class UnasApiService implements SyncService {
 
     final UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
 
+    System.out.println(response.body().string());
+
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
 
     return uCustomers;
