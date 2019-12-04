@@ -293,6 +293,7 @@ public class UnasApiService implements SyncService {
 
       unasProduct.id = ugyvitelProduct.webshopId;
       unasProduct.sku = ugyvitelProduct.productCode;
+      System.out.println(ugyvitelProduct.webshopId);
 
       final com.ks.supersync.model.unas.product.stock.Stock stock = new com.ks.supersync.model.unas.product.stock.Stock();
       //stock.price = ugyvitelProduct.lastPurchasePrice;
