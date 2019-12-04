@@ -730,7 +730,7 @@ public class UnasApiService implements SyncService {
       || ugyvitelCustomer.centralZip.length() < 4 
       || ugyvitelCustomer.phone.length() < 6
       || ugyvitelCustomer.phone.equals("")
-      || ugyvitelCustomer.taxNumber != null && ugyvitelCustomer.taxNumber.length() != 11){
+      || (ugyvitelCustomer.taxNumber != null && ugyvitelCustomer.taxNumber.length() != 11)){
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
