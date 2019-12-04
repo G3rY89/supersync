@@ -299,7 +299,7 @@ public class UnasApiService implements SyncService {
 
       for (final Stock ugyvitelstock : ugyvitelProduct.stocks.stock) {
         System.out.println(ugyvitelstock.stockId + " " + ugyvitelstock.freeStock);
-        stock.qty += ugyvitelstock.freeStock;
+        //stock.qty += ugyvitelstock.freeStock;
       }
       unasProduct.stocks.stock.add(stock);
       unasProducts.products.add(unasProduct);
