@@ -297,9 +297,9 @@ public class UnasApiService implements SyncService {
       final com.ks.supersync.model.unas.product.stock.Stock stock = new com.ks.supersync.model.unas.product.stock.Stock();
       //stock.price = ugyvitelProduct.lastPurchasePrice;
 
-      stock.qty = 0;
       for (final Stock ugyvitelstock : ugyvitelProduct.stocks.stock) {
-        stock.qty += ugyvitelstock.freeStock;
+        System.out.println(ugyvitelstock.freeStock);
+        //stock.qty += ugyvitelstock.freeStock;
       }
       unasProduct.stocks.stock.add(stock);
       unasProducts.products.add(unasProduct);
