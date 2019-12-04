@@ -396,7 +396,7 @@ public class UnasApiService implements SyncService {
 
         final UnasCustomer unasCustomer = new UnasCustomer();
         
-        unasCustomer.id = ugyvitelCustomer.customerId;
+        unasCustomer.id = ugyvitelCustomer.webshopId;
         unasCustomer.email = ugyvitelCustomer.email;
         unasCustomer.contact.name = ugyvitelCustomer.customerName;
         unasCustomer.contact.phone = ugyvitelCustomer.phone;
