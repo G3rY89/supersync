@@ -481,7 +481,7 @@ public class UnasApiService implements SyncService {
 
       ugyvitelProduct.quantityUnit.tQUnit.add(new TranslatedQuantityUnit(webshopI18n.language, unasProduct.unit));
       ugyvitelProduct.service = unasProduct.stocks != null && unasProduct.stocks.stock != null
-          && unasProduct.stocks.status != null ? unasProduct.stocks.status.active : 0;
+          && unasProduct.stocks.status != null ? 0 : unasProduct.stocks.status.active;
       if (unasProduct.Prices != null) {
         for (final Price price : unasProduct.Prices.prices) {
             final PriceRule priceRule = new PriceRule();
