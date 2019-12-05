@@ -749,6 +749,7 @@ public class UnasApiService implements SyncService {
     while(iterator.hasNext()){
       UnasCustomer validateUnasCustomer = iterator.next();
       if(validateUnasCustomer.userName == null){
+        System.out.println(validateUnasCustomer.email);
         iterator.remove();
       }
     }
