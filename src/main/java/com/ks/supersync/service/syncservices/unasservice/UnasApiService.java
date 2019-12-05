@@ -88,7 +88,6 @@ public class UnasApiService implements SyncService {
     this.writer = new StringWriter();
     this.jaxbMarshaller.marshal(mappedObject, this.writer);
 
-    System.out.println(this.writer.toString());
     return this.writer.toString();
   }
 
@@ -295,11 +294,9 @@ public class UnasApiService implements SyncService {
       unasProduct.sku = ugyvitelProduct.productCode;
 
       final com.ks.supersync.model.unas.product.stock.Stock stock = new com.ks.supersync.model.unas.product.stock.Stock();
-      //stock.price = ugyvitelProduct.lastPurchasePrice;
 
       stock.qty = 0.0;
       for (final Stock ugyvitelstock : ugyvitelProduct.stocks.stock) {
-        System.out.println(ugyvitelstock.stockId + " " + ugyvitelstock.freeStock);
         stock.qty += ugyvitelstock.freeStock;
       }
       unasProduct.stocks.stock.add(stock);
