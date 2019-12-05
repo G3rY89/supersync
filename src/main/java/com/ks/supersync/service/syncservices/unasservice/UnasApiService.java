@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBContext;
@@ -122,6 +123,10 @@ public class UnasApiService implements SyncService {
     final Response response = client.newCall(request).execute();
     
     final UnasCustomers unasCustomers = (UnasCustomers) createObjectFromXMLString(response.body().string(), UnasCustomers.class);
+
+    Iterator<UnasCustomer> unasCustomerIterator = unasCustomers.customer.iterator();
+
+    ValidateUnasCustomersToUgyvitel(unasCustomerIterator);
 
     uCustomers = mapUnasCustomersToUgyvitelCustomers(unasCustomers);
 
@@ -389,7 +394,7 @@ public class UnasApiService implements SyncService {
     return unasOrders;
   }
 
-  public UnasCustomers mapUgyvitelCustomersToUnasCustomers(final UgyvitelCustomers ugyvitelCustomers) {
+  private UnasCustomers mapUgyvitelCustomersToUnasCustomers(final UgyvitelCustomers ugyvitelCustomers) {
     final UnasCustomers unasCustomers = new UnasCustomers();
 
     unasCustomers.customer = new ArrayList<>();
@@ -724,7 +729,7 @@ public class UnasApiService implements SyncService {
     return unasProducts;
   }
 
-  public void ValidateUgyvitelCustomersToUnas(final UgyvitelCustomers ugyvitelCustomers, final UgyvitelCustomers validatedUgyvitelCustomers, final UgyvitelCustomers invalidUgyvitelCustomers){
+  private void ValidateUgyvitelCustomersToUnas(final UgyvitelCustomers ugyvitelCustomers, final UgyvitelCustomers validatedUgyvitelCustomers, final UgyvitelCustomers invalidUgyvitelCustomers){
     for (final UgyvitelCustomer ugyvitelCustomer : ugyvitelCustomers.customer) {
       if(!ugyvitelCustomer.countryCode.equals("HU") 
       || ugyvitelCustomer.email.equals("") 
@@ -736,6 +741,15 @@ public class UnasApiService implements SyncService {
         invalidUgyvitelCustomers.customer.add(ugyvitelCustomer);
       } else {
         validatedUgyvitelCustomers.customer.add(ugyvitelCustomer);
+      }
+    }
+  }
+  
+  private void ValidateUnasCustomersToUgyvitel(Iterator<UnasCustomer> iterator) {
+    while(iterator.hasNext()){
+      UnasCustomer validateUnasCustomer = iterator.next();
+      if(validateUnasCustomer.userName == null){
+        iterator.remove();
       }
     }
   }
