@@ -748,7 +748,7 @@ public class UnasApiService implements SyncService {
   private void ValidateUnasCustomersToUgyvitel(Iterator<UnasCustomer> iterator) {
     while(iterator.hasNext()){
       UnasCustomer validateUnasCustomer = iterator.next();
-      if(validateUnasCustomer.contact.name == null){
+      if(validateUnasCustomer.contact.name == null || validateUnasCustomer.addresses == null){
         System.out.println(validateUnasCustomer.email);
         iterator.remove();
       }
